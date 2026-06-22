@@ -34,26 +34,41 @@ pages above.
 ## 2. Render records for the agent
 
 The ReDesign agent consumes one rendered canvas per design as
-`crello_test_<id>/composite.png`:
+`crello_test_<id>/composite.png`. Build these records from the downloaded
+Parquet shards with the bundled script:
+
+```bash
+# Render every test record (composite.png + elements/ + gt_metadata.json)
+python scripts/prepare_crello_records.py \
+    --parquet-glob "crello_data/test-*.parquet" \
+    --output-dir crello_data/records
+
+# Or a quick smoke test (first 3 records)
+python scripts/prepare_crello_records.py \
+    --parquet-glob "crello_data/test-*.parquet" \
+    --output-dir crello_data/records --limit 3
+```
+
+This produces, per design:
 
 ```
 crello_data/records/
-  crello_test_0001/composite.png
-  crello_test_0002/composite.png
+  crello_test_0000/
+    composite.png        # full composited canvas (agent input)
+    elements/            # per-element GT RGBA images
+    gt_metadata.json     # GT metadata (used by the Crello evaluation)
   ...
 ```
 
-The Crello Parquet records store each design as layered elements; render the
-composited canvas to `composite.png` per record (and keep the GT element images
-+ metadata alongside if you intend to run the Crello *evaluation*). Then run:
+(z-ordered alpha blending of element images onto the canvas at the stored
+sizes/positions, following the canvas-vae compositing convention.)
+
+Then run the agent (replace `<QWEN_GPU_IDS>` / `<TOOL_GPU_IDS>` with your own
+comma-separated GPU ids, e.g. `0,1`):
 
 ```bash
 python -m REDESIGN.run_agent_crello \
     --data_dir crello_data/records \
     --output_dir outputs/crello_agent \
-    --qwen_gpus 2,3,4,5 --qwen_pair_size 2 --tool_gpus 6,7
+    --qwen_gpus <QWEN_GPU_IDS> --qwen_pair_size 2 --tool_gpus <TOOL_GPU_IDS>
 ```
-
-> The original Crello → `composite.png` rendering follows the canvas-vae element
-> compositing convention (z-ordered alpha blending of element images onto the
-> canvas at the stored sizes/positions).
