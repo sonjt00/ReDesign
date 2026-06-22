@@ -685,6 +685,50 @@ def main():
                     row += f" | {float(v):>8.4f}" if v is not None else f" | {'N/A':>8}"
                 print(row, flush=True)
 
+    # 5b. Save a readable cross-model editability comparison (markdown + CSV)
+    metric_keys = ["l1", "ssim", "lpips", "dino"]
+    model_order_cmp = [m for m in (["agent"] + sorted(x for x in model_infos if x != "agent"))
+                       if m in model_infos]
+    long_rows = []           # (model, subtask, count, l1, ssim, lpips, dino)
+    per_model_acc = {m: {k: [] for k in metric_keys} for m in model_order_cmp}
+    for model_name in model_order_cmp:
+        for sub_name in subtasks_to_run:
+            sp = OUTPUT_DIR / model_name / f"atomic_{sub_name}_summary.json"
+            if not sp.exists():
+                continue
+            s = json.load(open(sp)).get("summary", {})
+            means = _summary_means(s)
+            long_rows.append((model_name, sub_name, s.get("total", ""),
+                              *[means.get(k) for k in metric_keys]))
+            for k in metric_keys:
+                if isinstance(means.get(k), (int, float)):
+                    per_model_acc[model_name][k].append(means[k])
+
+    def _f(v):
+        return f"{v:.4f}" if isinstance(v, (int, float)) else "-"
+
+    md = ["# Editability comparison (agent vs baselines)\n",
+          "Mean over subtasks per model (lower L1/LPIPS better; higher SSIM/DINO better):\n",
+          "| model | " + " | ".join(metric_keys) + " |",
+          "|---|" + "|".join(["---"] * len(metric_keys)) + "|"]
+    for m in model_order_cmp:
+        avg = {k: (sum(per_model_acc[m][k]) / len(per_model_acc[m][k]) if per_model_acc[m][k] else None)
+               for k in metric_keys}
+        md.append("| " + m + " | " + " | ".join(_f(avg[k]) for k in metric_keys) + " |")
+    md.append("\n## Per-subtask detail\n")
+    md.append("| model | subtask | count | " + " | ".join(metric_keys) + " |")
+    md.append("|---|---|---|" + "|".join(["---"] * len(metric_keys)) + "|")
+    for r in long_rows:
+        md.append("| " + " | ".join([str(r[0]), str(r[1]), str(r[2])] + [_f(x) for x in r[3:]]) + " |")
+    (OUTPUT_DIR / "comparison_editability.md").write_text("\n".join(md) + "\n")
+
+    import csv as _csv
+    with open(OUTPUT_DIR / "comparison_editability.csv", "w", newline="") as f:
+        w = _csv.writer(f)
+        w.writerow(["model", "subtask", "count", *metric_keys])
+        w.writerows(long_rows)
+    print(f"\nSaved comparison_editability.md / .csv to {OUTPUT_DIR}", flush=True)
+
     # 6. Save merged overview
     print(f"\n{'='*80}", flush=True)
     print("SAVING MERGED RESULTS", flush=True)
