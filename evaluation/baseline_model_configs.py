@@ -337,21 +337,21 @@ def get_common_episodes(
 
 def add_baseline_dir_args(parser):
     """Add directory arguments for all models."""
-    parser.add_argument("--layered-dir", type=str, default="./baseline_layerd_experiment",
+    parser.add_argument("--layered-dir", type=str, default="outputs/baseline_layered",
                         help="Root directory for layered baseline experiment")
-    parser.add_argument("--multi-tools-dir", type=str, default="./baseline_muilti_tools_experiment",
+    parser.add_argument("--multi-tools-dir", type=str, default="outputs/baseline_multi_tools",
                         help="Root directory for multi-tools baseline experiment")
-    parser.add_argument("--sparse-verif-dir", type=str, default="./baseline_sparse_verification_agent_experiment",
+    parser.add_argument("--sparse-verif-dir", type=str, default="outputs/baseline_sparse_verif",
                         help="Root directory for sparse verification agent baseline experiment")
-    parser.add_argument("--simple-verif-dir", type=str, default="./baseline_simple_recon_verifier_experiment",
+    parser.add_argument("--simple-verif-dir", type=str, default="outputs/baseline_simple_verif",
                         help="Root directory for simple reconstruction verifier baseline experiment")
-    parser.add_argument("--omnisvg-dir", type=str, default="./baseline_omnisvg_experiment",
+    parser.add_argument("--omnisvg-dir", type=str, default="outputs/baseline_omnisvg",
                         help="Root directory for OmniSVG baseline experiment")
-    parser.add_argument("--vtracer-dir", type=str, default="./baseline_vtracer_experiment",
+    parser.add_argument("--vtracer-dir", type=str, default="outputs/baseline_vtracer",
                         help="Root directory for VTracer baseline experiment")
-    parser.add_argument("--agent-dir", type=str, default=None,
+    parser.add_argument("--agent-dir", type=str, default="outputs/figma_agent",
                         help="Agent inference output directory (episodes/<id>/parse.json)")
-    parser.add_argument("--qwen-dir", type=str, default=None,
+    parser.add_argument("--qwen-dir", type=str, default="outputs/baseline_qwen",
                         help="Qwen inference output directory (<id>/layer_00.png)")
 
 
