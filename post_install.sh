@@ -26,17 +26,19 @@ cd "$REPO_ROOT"
 echo "=== [1/6] PaddlePaddle GPU 3.1.0 (cu126; runs on CUDA>=12.6 drivers) ==="
 pip install paddlepaddle-gpu==3.1.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 
-echo "=== [2/6] PyTorch (stable, cu128) ==="
-# Pinned to a stable cu128 build for reproducibility and driver compatibility.
-# Installed AFTER PaddlePaddle so PyTorch's CUDA libraries (incl. NCCL) win.
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
-
-echo "=== [3/6] diffusers (from git: provides QwenImageLayeredPipeline) ==="
+echo "=== [2/6] diffusers (from git: provides QwenImageLayeredPipeline) ==="
 # QwenImageLayeredPipeline is not in the pinned PyPI diffusers; install from git.
 pip install -U "git+https://github.com/huggingface/diffusers.git"
 
-echo "=== [4/6] SAM 2 (segment-anything-2) ==="
+echo "=== [3/6] SAM 2 (segment-anything-2) ==="
 pip install "git+https://github.com/facebookresearch/sam2.git"
+
+echo "=== [4/6] PyTorch (stable, cu128) — installed LAST and forced ==="
+# IMPORTANT: install PyTorch AFTER the git packages above. diffusers/sam2 pull
+# their own torch from the default PyPI index (a cu130 build that is NOT
+# compatible with <=12.9 drivers); re-pinning torch here with --force-reinstall
+# guarantees the driver-compatible cu128 build (and a matching NCCL) wins.
+pip install --force-reinstall torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 
 echo "=== [5/6] Build GroundingDINO CUDA extension (bundled in modules/) ==="
 # Needs a CUDA toolkit (nvcc) matching the torch build. Non-fatal: the tool can
