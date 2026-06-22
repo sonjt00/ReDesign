@@ -21,7 +21,7 @@ Run entrypoints **from the repository root** (the package is imported as
 ```bash
 python -m REDESIGN.run_agent_figma \
     --data_dir figma_data --output_dir outputs/figma_agent \
-    --qwen_gpus 2,3,4,5 --qwen_pair_size 2 --tool_gpus 6,7
+    --qwen_gpus <QWEN_GPU_IDS> --qwen_pair_size 2 --tool_gpus <TOOL_GPU_IDS>
 ```
 
 Output per episode: `outputs/<...>/episodes/<episode_id>/parse.json`,

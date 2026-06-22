@@ -144,8 +144,48 @@ Bundled `modules/` retain their upstream licenses (see
 [`modules/README.md`](modules/README.md)); the original ReDesign code is released
 under the terms in [`LICENSE`](LICENSE).
 
-## Hardware notes
+## Compute & API configuration (set to your budget)
 
-The agent uses multiple GPUs (separate GPUs for the Qwen layered model vs. the
-vision tools). Configure with `--qwen_gpus` / `--tool_gpus` or the
-`URLD_QWEN_GPUS` / `URLD_TOOL_GPUS` environment variables.
+Nothing about the hardware is hard-coded — every GPU id, the number of GPUs, the
+worker count, and the LLM API key are **placeholders** you set for your own
+machine and budget. The agent has two kinds of cost:
+
+**A. GPU compute** — two GPU roles, configured independently:
+
+| Role | Flag / env var | What runs on it | Memory guidance |
+|---|---|---|---|
+| Qwen layered model | `--qwen_gpus <QWEN_GPU_IDS>` / `URLD_QWEN_GPUS` | `Qwen/Qwen-Image-Layered` (the costly generator) | ~40 GB in bf16. Fits on **one ≥48 GB GPU**; on smaller GPUs give it **several GPUs** (it is sharded across them with `device_map="balanced"`), or it falls back to CPU offload (slower). |
+| Vision tools | `--tool_gpus <TOOL_GPU_IDS>` / `URLD_TOOL_GPUS` | GroundingDINO, SAM 2, Hi-SAM, LaMa, ObjectClear (PaddleOCR runs on CPU) | ~10–16 GB total → **one ≥16 GB GPU** is enough. |
+
+- **Minimum** to run end-to-end: **1 GPU**. Put both roles on it, e.g.
+  `--qwen_gpus 0 --tool_gpus 0` (needs roughly ≥48 GB so Qwen + tools coexist; on
+  an H200/A100-80GB this is comfortable). Optionally also `--objectclear_gpu 0`.
+- **Faster**: more GPUs = more **parallel** Qwen workers. `--qwen_pair_size N`
+  sets how many GPUs each Qwen worker uses; the remaining `--qwen_gpus` are split
+  into that many parallel workers. e.g. `--qwen_gpus 0,1,2,3 --qwen_pair_size 2`
+  → 2 workers (GPUs {0,1} and {2,3}) decoding episodes concurrently. Keep the
+  tools on a separate GPU (`--tool_gpus 4`) when you can.
+- Defaults are conservative (everything on GPU 0). GPU ids are **per-machine** —
+  use `nvidia-smi` to pick free ones.
+
+**B. LLM API (the VLM controller)** — the agent calls an OpenAI-compatible
+chat-completions endpoint for routing/labeling decisions:
+
+- Set the key in `.env`: `OPENAI_API_KEY=...` (and `GEMINI_API_KEY=...` only if you
+  enable the optional nanobanana tool).
+- `--workers <N>` sets how many episodes are processed in parallel; each worker
+  issues its own API calls. **More workers = faster but more concurrent API
+  usage** (watch your rate limits and spend). `--llm_limit` caps the number of
+  LLM calls per episode.
+
+**Examples (replace ids with your own free GPUs):**
+
+```bash
+# Single GPU (e.g. one 80 GB GPU), modest API usage
+python -m REDESIGN.run_agent_figma --data_dir figma_data --output_dir outputs/figma_agent \
+    --qwen_gpus 0 --tool_gpus 0 --objectclear_gpu 0 --workers 1
+
+# Multi-GPU, faster (3 GPUs for parallel Qwen, 1 for tools), more API workers
+python -m REDESIGN.run_agent_figma --data_dir figma_data --output_dir outputs/figma_agent \
+    --qwen_gpus 0,1,2 --qwen_pair_size 1 --tool_gpus 3 --workers 4
+```
