@@ -917,7 +917,11 @@
 
             const clampIdx = (i) => Math.max(0, Math.min(panels.length - 1, i));
             const apply = () => {
-                fp.style.transform = 'translateY(' + (-current * window.innerHeight) + 'px)';
+                // Measure the real panel height (100dvh) instead of
+                // window.innerHeight (≈100lvh): on mobile the URL bar makes
+                // them differ, and -current*innerHeight would compound drift.
+                const h = panels[0].getBoundingClientRect().height || window.innerHeight;
+                fp.style.transform = 'translateY(' + (-current * h) + 'px)';
             };
             const reveal = (panel) => {
                 panel.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
@@ -963,7 +967,15 @@
             const onWheel = (e) => {
                 const dir = e.deltaY > 0 ? 1 : (e.deltaY < 0 ? -1 : 0);
                 if (!dir) return;
-                if (animating) { e.preventDefault(); return; }
+                if (animating) {
+                    e.preventDefault();
+                    // A single inertial fling streams wheel events for ~1s;
+                    // re-arm the lock on each so it only releases once the
+                    // wheel goes quiet — prevents one fling chaining 2 panels.
+                    clearTimeout(animTimer);
+                    animTimer = setTimeout(() => { animating = false; }, DURATION);
+                    return;
+                }
                 if (atEdge(panels[current], dir)) {
                     e.preventDefault();
                     goTo(current + dir);
