@@ -16,10 +16,21 @@
 > export no longer says which pixels form which object or how layers stack — ReDesign
 > recovers that structure.
 
-**How it works.** A **VLM controller** grows a *layer hierarchy* from the image —
-expanding it breadth-first (coarse → fine) and choosing one tool-backed action per
-node — while a **modular verifier** accepts, prunes, or retries each step, driving the
-tree toward clean, atomic, editable leaves.
+**How it works.** ReDesign treats a design as a **tree of layers** and rebuilds it
+piece by piece, starting from the whole image as the root:
+
+1. **Look & decide** — a **VLM controller** (a vision-language model) examines a
+   region and picks *one* **tool-backed action** to break it down: extract text,
+   fork into layers, split, detect & segment, or vectorize (the five tools in the
+   table below).
+2. **Split coarse → fine** — it expands the tree **breadth-first**: big regions
+   first, then their finer details, so the structure emerges gradually.
+3. **Check every step** — a **modular verifier** inspects each split and either
+   **accepts** it, **prunes** an invalid or duplicate branch, or **retries** with a
+   different tool.
+
+This repeats until every leaf of the tree is a clean, **atomic, editable element** —
+a single text box, shape, or image — which is then exported as the JSON hierarchy.
 
 The controller orchestrates five tool actions:
 
@@ -30,6 +41,8 @@ The controller orchestrates five tool actions:
 | **Split (CCA)** | connected-component analysis | disjoint elements of one layer |
 | **Detect & segment** | GroundingDINO + SAM 2 + inpaint | a foreground object + background |
 | **Vectorize** | VTracer | a shape-like leaf → vector path (photos stay raster) |
+
+<br>
 
 ## Repository layout
 
@@ -51,6 +64,8 @@ ReDesign/
 ├── ATTRIBUTION.md       # dataset & third-party attribution
 └── LICENSE
 ```
+
+<br>
 
 ## Quick Start
 
@@ -189,6 +204,8 @@ REDESIGN_FIGMA_DATA=figma_data REDESIGN_AGENT_DIR=outputs/figma_agent \
 See [`evaluation/README.md`](evaluation/README.md) for the full evaluation guide
 (metrics, per-baseline editability, text editability, and result layout).
 
+<br>
+
 ## Compute & API configuration (set to your budget)
 
 Nothing about the hardware is hard-coded — every GPU id, the number of GPUs, the
@@ -226,6 +243,8 @@ chat-completions endpoint for its expansion decisions. All of it is configured i
 - `--workers <W>` processes `W` episodes in parallel; each issues its own API
   calls → **more workers = faster, up to your endpoint's rate limit** (mind spend).
   `--llm_limit` caps LLM calls per episode.
+
+<br>
 
 ## Dataset, license & attribution
 
