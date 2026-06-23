@@ -74,7 +74,7 @@
             font-size: 4rem;
             font-weight: 700;
             line-height: 1.2;
-            margin: 3rem 0 1rem 0;
+            margin: 4rem 0 1rem 0;
             letter-spacing: -0.02em;
             background: var(--gradient-coral);
             -webkit-background-clip: text;
@@ -87,7 +87,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             line-height: 1.3;
-            margin: 3.5rem 0 1.5rem 0;
+            margin: 4.5rem 0 1.5rem 0;
             letter-spacing: -0.01em;
             background: var(--gradient-coral);
             -webkit-background-clip: text;
@@ -99,7 +99,7 @@
             font-family: var(--font-heading);
             font-size: 1.8rem;
             font-weight: 700;
-            margin: 3rem 0 1rem 0;
+            margin: 3.5rem 0 1rem 0;
             background: var(--gradient-coral);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -478,7 +478,7 @@
         <h1 class="text-gradient reveal">ReDesign</h1>
         <h4 class="text-muted reveal">Recovering Editable Design Structures from Images via Agentic Decomposition</h4>
         <div style="margin: 2rem 0;" class="reveal">
-            <a href="https://openreview.net/pdf?id=JiEr8B3WBr" class="btn btn-gradient" style="margin: 0.5rem;">📄 Paper</a>
+            <a href="https://openreview.net/pdf?id=JiEr8B3WBr" class="btn btn-outline" style="margin: 0.5rem;">📄 Paper</a>
             <a href="https://github.com/sonjt00/ReDesign" class="btn btn-outline" style="margin: 0.5rem;">💻 Code</a>
             <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" class="btn btn-outline" style="margin: 0.5rem;">📊 Dataset</a>
         </div>
@@ -719,12 +719,6 @@
 
     <script>
         const setupRevealObserver = () => {
-            // Initialize all reveal elements with opacity 0 and transform
-            document.querySelectorAll('.reveal').forEach((el, idx) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-            });
-
             const options = {
                 threshold: 0.15,
                 rootMargin: '0px 0px -10% 0px',
@@ -733,9 +727,7 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('is-in');
-                        }, 0);
+                        entry.target.classList.add('is-in');
                         observer.unobserve(entry.target);
                     }
                 });
@@ -746,10 +738,11 @@
             });
         };
 
+        // Ensure DOM is ready before observing
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', setupRevealObserver);
         } else {
-            setupRevealObserver();
+            requestAnimationFrame(() => setupRevealObserver());
         }
     </script>
 </body>
