@@ -42,8 +42,6 @@ metadata and per-element images, enabling both **reconstruction-accuracy** and
 
 ## License & Attribution
 
----
-
 **All 909 episodes are licensed under [Creative Commons Attribution 4.0
 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).** Each
 design was published under CC BY 4.0 by its original author on the Figma
@@ -66,8 +64,6 @@ the original authors and retain the CC BY 4.0 license and source links.
 <br>
 
 ## Dataset structure
-
----
 
 ```
 figma_data/
@@ -92,8 +88,6 @@ GT reconstruction resolves to `<root>/<unit_images_dir>/<reconstructed_image_pat
 <br>
 
 ## Usage with ReDesign
-
----
 
 ```bash
 # Download
@@ -124,8 +118,6 @@ Complete per-episode attribution for all 288 original authors is provided in
 <br>
 
 ## Discussion
-
----
 
 Questions, feedback, or requests? Open a thread in the
 **[Community tab](https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909/discussions)**

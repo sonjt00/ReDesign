@@ -1,4 +1,4 @@
-# ReDesign
+# ReDesign (ECCV 2026)
 
 ### Recovering Editable Design Structures from Images via Agentic Decomposition
 
