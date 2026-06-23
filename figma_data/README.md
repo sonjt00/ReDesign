@@ -1,3 +1,18 @@
+---
+license: cc-by-4.0
+pretty_name: ReDesign Figma-909
+task_categories:
+  - image-to-image
+size_categories:
+  - n<1K
+tags:
+  - graphic-design
+  - layer-decomposition
+  - figma
+  - editable-design
+  - vector-graphics
+---
+
 # ReDesign Figma-909 Benchmark
 
 <p align="center">
