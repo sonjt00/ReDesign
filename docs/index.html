@@ -35,7 +35,10 @@
         }
 
         * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y proximity; /* Webflow/FullPage-style section snapping */
+        }
         body {
             font-family: var(--font-body);
             font-size: 1.1rem;
@@ -418,6 +421,42 @@
             transform: translateY(0);
         }
 
+        /* ============================================
+           Scroll-snap slide deck (Webflow / FullPage.js feel)
+           Each top-level block fills the viewport and snaps into
+           place as you scroll. 'proximity' keeps it gentle so a
+           section taller than one screen never traps the user.
+           ============================================ */
+        body > header,
+        body > section:not(.toss-scrolly),
+        body > footer { scroll-snap-align: start; }
+
+        body > header,
+        body > section:not(.toss-scrolly),
+        body > footer {
+            min-height: 100vh;
+            min-height: 100svh;
+            margin-top: 0;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            /* 'safe center' centers content that fits, but falls back to
+               top-alignment when a slide's content exceeds the viewport —
+               otherwise centered overflow is clipped/unreachable off the top. */
+            justify-content: safe center;
+        }
+
+        /* Vertical centering supplies generous space above each title,
+           so neutralize the large flow-margins that would overflow a
+           full-screen slide. */
+        body > header h1,
+        body > section:not(.toss-scrolly) h1,
+        body > section:not(.toss-scrolly) h2,
+        body > section:not(.toss-scrolly) h3 { margin-top: 0; }
+
+        /* Keep every figure within a single screen. */
+        body > section figure { margin: 1.5rem auto; }
+        body > section figure img { max-height: 58vh; height: auto; }
 
         /* ============================================
            Toss-style pinned scrollytelling
@@ -639,7 +678,7 @@
     </section>
 
     <!-- WHAT WE DO -->
-    <section class="narrow reveal" style="margin-top: 6rem;">
+    <section class="narrow reveal">
         <div class="callout">
             <h3 style="margin-top: 0; text-align: center;" class="reveal">What ReDesign Does</h3>
             <p class="reveal">ReDesign recovers a fully editable design hierarchy from a single image.</p>
@@ -667,7 +706,7 @@
             <figcaption>Controller orchestrates five actions; each produces child layers. Verifier ensures no duplication, no incomplete coverage. Output: editable JSON hierarchy.</figcaption>
         </figure>
 
-        <h3 class="text-center reveal" style="margin-top: 5.5rem;">Five Tool-Backed Actions</h3>
+        <h3 class="text-center reveal" style="margin-top: 2.5rem;">Five Tool-Backed Actions</h3>
         <div class="action-grid reveal">
             <div class="action-card reveal">
                 <div class="action-title">Text extraction</div>
