@@ -26,32 +26,19 @@ tags:
 
 ![ReDesign Figma-909 dataset overview](./exp_dataset.png)
 
-> **Abstract.** ReDesign is an agentic framework that recursively decomposes a
-> flattened raster graphic design into an editable, hierarchical layer structure.
-> A vision-language controller grows a layer tree from the input image; at each
-> node it chooses among complementary tools — text extraction, layered generation
-> (Qwen-Image-Layered), connected-component splitting, open-vocabulary
-> detect-and-segment, and vectorization — while a modular verifier accepts, prunes,
-> or retries every expansion, producing a faithfully re-renderable hierarchy of
-> editable elements. **Figma-909** is the project's evaluation benchmark: 909
-> real-world Figma Community designs with ground-truth layer decompositions,
-> supporting both **reconstruction-accuracy** and **editability** evaluation.
-> ReDesign outperforms vectorization (VTracer), layered-decomposition (LayerD,
-> Qwen-Image-Layered), and linear tool-agent baselines.
+> **ReDesign turns a single flat raster image back into an editable design:** text with real typography, vector shapes (fill/stroke), images, groups, and z-order, exported as an editable **JSON hierarchy**.
+> When the original file is lost, a flat export no longer says which pixels form which object or how layers stack.
+> ReDesign recovers that structure.
 
-📦 **Download:** [`Jintae-Park/ReDesign-Figma909` on HuggingFace](https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909)
-— or run `python scripts/download_figma_dataset.py` to fetch it into `./figma_data`.
+**How it works.** ReDesign treats a design as a **tree of layers** and rebuilds it piece by piece, starting from the whole image as the root:
 
-909 real-world graphic-design frames sourced from the **Figma Community**, used as
-the Figma evaluation benchmark in the ReDesign project (recursive layer
-decomposition of designs into editable elements).
+1. **Look & decide:** a **VLM controller** examines a region and picks *one* tool-backed action to break it down (extract text, fork into layers, split, detect & segment, or vectorize).
+2. **Split coarse → fine:** it expands the tree **breadth-first**, big regions first, then their finer details.
+3. **Check every step:** a **modular verifier** accepts, prunes, or retries each split, driving the tree toward clean, atomic, editable leaves.
 
-> In a fresh clone this folder contains only this README; the actual dataset is
-> hosted on HuggingFace (link above) and downloaded on demand.
+**Figma-909** is the evaluation benchmark for ReDesign: 909 real-world Figma Community designs, each a self-contained **episode** with ground-truth layer decomposition metadata and per-element images, supporting both **reconstruction-accuracy** and **editability** evaluation.
 
-Every frame is a self-contained episode with ground-truth layer decomposition
-metadata and per-element images, enabling both **reconstruction-accuracy** and
-**editability** evaluation.
+> 📁 The dataset files (metadata, images, attribution) live in the **[Files and versions](https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909/tree/main)** tab above. See the [ReDesign GitHub repository](https://github.com/sonjt00/ReDesign) for the download script and the full pipeline.
 
 <br>
 <br>
@@ -81,24 +68,16 @@ the original authors and retain the CC BY 4.0 license and source links.
 
 ## Dataset structure
 
-```
-figma_data/
-├── valid_frames/<episode_id>.json          # 909 GT metadata (layers, geometry, license, attribution)
-├── unit_images/<figma_dir>/                # per-episode GT element images + reconstruction
-│   ├── _original_<f>.png                    #   original frame render
-│   ├── _reconstructed_<f>.png               #   GT reconstruction (agent input)
-│   ├── _reconstructed_bbox_<f>.png          #   reconstruction with element bboxes
-│   ├── _expanded_background.png             #   expanded background layer
-│   └── <element>.png                        #   individual GT layer/element images
-├── reconstructed_images/<episode_id>.png        # GT reconstruction, episode-id keyed (convenience)
-├── reconstructed_images/<episode_id>_bbox.png   # + bbox variant
-└── ATTRIBUTIONS.csv                        # per-episode author / source / license
-```
+Each design is one self-contained **episode**, identified by an `episode_id` (the `valid_frames` JSON filename stem, e.g. `1002728450918630649_2_1898`). Every episode ships its ground-truth layer decomposition plus all per-element images.
 
-`episode_id` is the `valid_frames` JSON filename stem (e.g.
-`1002728450918630649_2_1898`). Inside each JSON, `unit_images_dir` and the
-per-element `image_path` fields are paths **relative to the dataset root**, so the
-GT reconstruction resolves to `<root>/<unit_images_dir>/<reconstructed_image_path>`.
+| Path | What it holds |
+|---|---|
+| `valid_frames/<episode_id>.json` | Ground-truth metadata: layer tree, geometry, z-order, license, attribution |
+| `unit_images/<figma_dir>/` | Per-element layer PNGs, the original render, and the GT reconstruction (`_reconstructed_*.png`, the agent's input) |
+| `reconstructed_images/<episode_id>.png` | GT reconstruction keyed by episode id (the `_bbox` variant overlays element boxes) |
+| `ATTRIBUTIONS.csv` | Per-episode author, source URL, and license |
+
+Inside each JSON, `unit_images_dir` and the per-element `image_path` fields are **relative to the dataset root**, so the reconstruction resolves to `<root>/<unit_images_dir>/<reconstructed_image_path>`.
 
 <br>
 <br>
