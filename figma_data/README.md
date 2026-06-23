@@ -2,8 +2,10 @@
 
 <p align="center">
   <a href="https://openreview.net/pdf?id=JiEr8B3WBr"><img alt="Paper" src="https://img.shields.io/badge/Paper-OpenReview-b31b1b?style=for-the-badge&logo=readthedocs&logoColor=white"></a>
+  &emsp;&emsp;&emsp;&emsp;
   <a href="https://sonjt00.github.io/ReDesign/"><img alt="Project Page" src="https://img.shields.io/badge/Project_Page-ReDesign-2ea44f?style=for-the-badge&logo=githubpages&logoColor=white"></a>
-  <a href="https://github.com/sonjt00/ReDesign"><img alt="Code" src="https://img.shields.io/badge/Code-GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+  &emsp;&emsp;&emsp;&emsp;
+  <a href="https://github.com/sonjt00/ReDesign"><img alt="Code" src="https://img.shields.io/badge/Code-GitHub-8957e5?style=for-the-badge&logo=github&logoColor=white"></a>
 </p>
 
 ![ReDesign Figma-909 dataset overview](./exp_dataset.png)
@@ -36,8 +38,11 @@ metadata and per-element images, enabling both **reconstruction-accuracy** and
 **editability** evaluation.
 
 <br>
+<br>
 
 ## License & Attribution
+
+---
 
 **All 909 episodes are licensed under [Creative Commons Attribution 4.0
 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).** Each
@@ -58,8 +63,11 @@ the original authors and retain the CC BY 4.0 license and source links.
 > GitHub repository.
 
 <br>
+<br>
 
 ## Dataset structure
+
+---
 
 ```
 figma_data/
@@ -81,8 +89,11 @@ per-element `image_path` fields are paths **relative to the dataset root**, so t
 GT reconstruction resolves to `<root>/<unit_images_dir>/<reconstructed_image_path>`.
 
 <br>
+<br>
 
 ## Usage with ReDesign
+
+---
 
 ```bash
 # Download
@@ -110,8 +121,11 @@ Complete per-episode attribution for all 288 original authors is provided in
 [`ATTRIBUTIONS.csv`](https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909/blob/main/ATTRIBUTIONS.csv).
 
 <br>
+<br>
 
 ## Discussion
+
+---
 
 Questions, feedback, or requests? Open a thread in the
 **[Community tab](https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909/discussions)**
