@@ -1,4 +1,5 @@
 ---
+viewer: false
 license: cc-by-4.0
 pretty_name: ReDesign Figma-909
 task_categories:
