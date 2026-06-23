@@ -16,6 +16,8 @@
 
 <br>
 
+---
+
 ## How it works
 
 ReDesign treats a design as a **tree of layers** and rebuilds it piece by piece, starting from the whole image as the root:
@@ -41,6 +43,8 @@ The controller orchestrates five tool actions:
 <br>
 <br>
 
+---
+
 ## Repository layout
 
 ```
@@ -64,6 +68,8 @@ ReDesign/
 
 <br>
 <br>
+
+---
 
 ## Quick Start
 
@@ -202,6 +208,8 @@ See [`evaluation/README.md`](evaluation/README.md) for the full evaluation guide
 <br>
 <br>
 
+---
+
 ## Compute & API configuration (set to your budget)
 
 Nothing about the hardware is hard-coded: every GPU id, the number of GPUs, the worker count, and the LLM API key are **placeholders** you set for your own machine and budget.
@@ -230,6 +238,8 @@ All of it is configured in `.env` (never hard-coded):
 
 <br>
 <br>
+
+---
 
 ## Dataset, license & attribution
 
