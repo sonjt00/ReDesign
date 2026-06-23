@@ -16,7 +16,8 @@
 
 <br>
 
-**How it works.**
+## How it works
+
 ReDesign treats a design as a **tree of layers** and rebuilds it piece by piece, starting from the whole image as the root:
 
 1. **Look & decide:** a **VLM controller** (a vision-language model) examines a region and picks *one* **tool-backed action** to break it down, choosing from extract text, fork into layers, split, detect & segment, or vectorize (the five tools in the table below).
@@ -66,6 +67,8 @@ ReDesign/
 
 ## Quick Start
 
+<br>
+
 ### 1. Environment
 
 ```bash
@@ -79,6 +82,8 @@ bash post_install.sh          # PyTorch cu128, PaddlePaddle, diffusers(git), sam
 
 `post_install.sh` ends with an import check (torch, paddle, sam2, diffusers `QwenImageLayeredPipeline`, transformers, langchain-openai, paddleocr, lpips, vtracer, opencv).
 Everything `[ OK ]` means the environment is ready.
+
+<br>
 
 ### 2. API keys & VLM endpoint
 
@@ -94,6 +99,8 @@ cp .env.example .env
 #   GEMINI_API_KEY=...     # optional: only for the nanobanana tool
 ```
 
+<br>
+
 ### 3. Checkpoints
 
 ```bash
@@ -108,6 +115,8 @@ Auto-downloads, from public sources, GroundingDINO, SAM 2.1, the SAM ViT-H backb
 > The script prints the link and target path (`weights/sam_tss_h_textseg.pth`), download it once manually.
 > (We do not redistribute third-party checkpoints.)
 
+<br>
+
 ### 4. Datasets
 
 **Figma-909** (ours, CC BY 4.0) provides 909 real Figma frames with ground-truth layers and attributes, used for both accuracy and editability:
@@ -117,6 +126,8 @@ python scripts/download_figma_dataset.py            # -> ./figma_data  (909 epis
 
 **Crello** (CyberAgent, not redistributed): raster designs for accuracy comparison against prior work.
 See the download and render guide in [`crello_data/README.md`](crello_data/README.md).
+
+<br>
 
 ### 5. Run the agent
 
@@ -157,6 +168,8 @@ python -m ReDesign.run_agent_crello \
 Outputs go to `--output_dir/episodes/<id>/` (`parse.json`, `history_tree.json`, reconstructions, logs).
 **The input datasets are never modified**, every artifact is written under the output directory.
 Completed episodes are skipped on re-run.
+
+<br>
 
 ### 6. Evaluate
 
