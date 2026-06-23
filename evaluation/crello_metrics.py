@@ -543,18 +543,26 @@ def extract_agent_elements(
         bbox = elem.get("bbox", [0, 0, 100, 100])
         x1_b, y1_b, x2_b, y2_b = [int(round(b)) for b in bbox] # Cast to int and round
         
-        img_path_rel = elem.get("canvas_image_uri") or elem.get("extracted_image_uri")
-        if not img_path_rel:
+        # Resolve the element image from the episode dir itself (layout-independent).
+        # The *_image_uri fields are written relative to the inference working
+        # directory, so they break whenever the output tree is moved/cloned; build
+        # the path from episode_dir instead (same approach as the Figma metric).
+        elem_id = elem.get("id")
+        potential_files = [
+            episode_dir / "elements" / str(elem_id) / "canvas_image.png",
+            episode_dir / "elements" / str(elem_id) / "extracted.png",
+            episode_dir / "elements" / str(elem_id) / "crop_image.png",
+        ]
+        img_path = next((p for p in potential_files if p.exists()), None)
+        if img_path is None:
+            json_uri = elem.get("canvas_image_uri") or elem.get("extracted_image_uri")
+            if json_uri:
+                fallback = episode_dir / "elements" / str(elem_id) / Path(json_uri).name
+                if fallback.exists():
+                    img_path = fallback
+        if img_path is None:
             continue
-        
-        # [Path handling] Keep absolute/relative path branching depending on the Crello/Figma environment
-        img_path = Path(img_path_rel)
-        if not img_path.is_absolute():
-            img_path = src_root / img_path_rel
-            
-        if not img_path.exists():
-            continue
-        
+
         try:
             elem_img = Image.open(img_path).convert("RGBA")
             elem_img = clean_alpha_noise(elem_img)
