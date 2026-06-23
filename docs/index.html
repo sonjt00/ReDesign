@@ -734,7 +734,17 @@
             }, options);
 
             document.querySelectorAll('.reveal').forEach(el => {
-                observer.observe(el);
+                // Check if element is already visible in viewport
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+                if (isVisible) {
+                    // Already in viewport: show immediately
+                    el.classList.add('is-in');
+                } else {
+                    // Not in viewport: observe for later reveal
+                    observer.observe(el);
+                }
             });
         };
 
