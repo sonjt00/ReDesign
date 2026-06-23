@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition">
     <title>ReDesign – Editable Design Recovery from Images</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gradient-coral: linear-gradient(135deg, #FF6B6B 0%, #FF6B6B 70%, #00BCD4 100%);
-            --color-coral-primary: #FF6B6B;
-            --color-teal: #00BCD4;
+            --gradient-coral: linear-gradient(135deg, #FF4A6D 0%, #FF4A6D 32%, #5A78FF 68%, #5A78FF 100%);
+            --color-coral-primary: #FF4A6D;
+            --color-blue-primary: #5A78FF;
+            --color-teal: #5A78FF;
             --color-white: #ffffff;
             --color-gray-50: #f8f9fa;
             --color-gray-100: #f0f2f5;
@@ -22,8 +25,8 @@
             --color-gray-700: #495057;
             --color-gray-800: #343a40;
             --color-gray-900: #212529;
-            --font-heading: "Fredoka", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-heading: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-body: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
             --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -72,9 +75,9 @@
         h1 {
             font-family: var(--font-heading);
             font-size: 4rem;
-            font-weight: 700;
+            font-weight: 800;
             line-height: 1.2;
-            margin: 4rem 0 1rem 0;
+            margin: 6.5rem 0 1.5rem 0;
             letter-spacing: -0.02em;
             background: var(--gradient-coral);
             -webkit-background-clip: text;
@@ -86,8 +89,8 @@
             font-family: var(--font-heading);
             font-size: 2.5rem;
             font-weight: 700;
-            line-height: 1.3;
-            margin: 4.5rem 0 1.5rem 0;
+            line-height: 1.2;
+            margin: 8rem 0 1.75rem 0;
             letter-spacing: -0.01em;
             background: var(--gradient-coral);
             -webkit-background-clip: text;
@@ -99,7 +102,8 @@
             font-family: var(--font-heading);
             font-size: 1.8rem;
             font-weight: 700;
-            margin: 3.5rem 0 1rem 0;
+            line-height: 1.25;
+            margin: 5.5rem 0 1.25rem 0;
             background: var(--gradient-coral);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -243,7 +247,7 @@
 
         /* Callout box */
         .callout {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(0, 188, 212, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(255, 74, 109, 0.08) 0%, rgba(90, 120, 255, 0.08) 100%);
             border-left: 4px solid var(--color-coral-primary);
             padding: 2rem;
             margin: 2rem 0;
@@ -278,7 +282,7 @@
         }
 
         .stat-card:hover {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(0, 188, 212, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(255, 74, 109, 0.05) 0%, rgba(90, 120, 255, 0.05) 100%);
             transform: translateY(-4px);
             box-shadow: var(--shadow);
         }
@@ -374,7 +378,7 @@
 
         .comparison-ours .comparison-img {
             border: 2px solid var(--color-coral-primary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 74, 109, 0.2);
         }
 
         .comparison-label {
@@ -396,6 +400,11 @@
             margin: 2rem 0;
         }
 
+        /* Smaller numbers in the Figma-909 benchmark cards */
+        .benchmark-grid .stat-number { font-size: 1.6rem; margin: 0.6rem 0; }
+        .benchmark-grid .stat-label { font-size: 0.85rem; }
+        .benchmark-grid .stat-license { font-size: 1.1rem; }
+
         /* Reveal animations */
         .reveal {
             opacity: 0;
@@ -409,6 +418,121 @@
             transform: translateY(0);
         }
 
+
+        /* ============================================
+           Toss-style pinned scrollytelling
+           A tall wrapper holds a sticky full-viewport
+           stage; scroll progress crossfades the panels.
+           ============================================ */
+        /* DEFAULT (no-JS / pre-JS): a clean static stacked layout so the
+           Problem/Idea/Result narrative is always readable. */
+        .toss-scrolly {
+            position: relative;
+        }
+
+        .toss-stage {
+            display: block;
+            padding: 2rem 0;
+        }
+
+        .toss-panel {
+            position: relative;
+            width: min(90%, 880px);
+            margin: 5rem auto;
+            text-align: center;
+        }
+
+        .toss-progress { display: none; }
+
+        /* ACTIVE (JS confirmed + motion allowed): pinned crossfade stage.
+           .is-active is added by JS only when it will drive the animation. */
+        .toss-scrolly.is-active {
+            height: 400vh; /* 3 panels → (n+1)*100vh of scroll */
+        }
+
+        .toss-scrolly.is-active .toss-stage {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 2rem 1rem 14vh;
+        }
+
+        .toss-scrolly.is-active .toss-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: 0;
+            max-height: 84vh;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            will-change: opacity, transform;
+        }
+
+        .toss-scrolly.is-active .toss-progress { display: flex; }
+
+        .toss-eyebrow {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-coral-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .toss-headline {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin: 0 0 1.5rem 0;
+            background: var(--gradient-coral);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .toss-sub {
+            font-family: var(--font-body);
+            font-size: clamp(1.05rem, 2vw, 1.4rem);
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--color-gray-600);
+            margin: 0 auto;
+            max-width: 620px;
+        }
+
+        .toss-progress {
+            position: absolute;
+            bottom: 8vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .toss-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-gray-300);
+            transition: all 0.3s ease;
+        }
+
+        .toss-dot.active {
+            width: 28px;
+            border-radius: 4px;
+            background: var(--gradient-coral);
+        }
+
+        /* Under reduced motion JS never adds .is-active, so the default
+           static toss layout applies — no extra overrides needed here. */
 
         /* Negative tone */
         .negative-tone {
@@ -451,6 +575,10 @@
             .action-grid.six-col { grid-template-columns: repeat(2, 1fr); }
             .benchmark-grid { grid-template-columns: repeat(2, 1fr); }
             .comparison-grid { grid-template-columns: repeat(2, 1fr); }
+            /* Toss scrolly: shorter wrapper + smaller headline on mobile */
+            .toss-scrolly.is-active { height: 320vh; }
+            .toss-headline { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+            .toss-sub { font-size: 1rem; }
         }
 
         @media (max-width: 576px) {
@@ -484,16 +612,34 @@
         </div>
     </header>
 
-    <!-- PROBLEM SECTION -->
-    <section class="narrow reveal">
-        <h2 class="negative-tone text-center">A Flat Image Is a Dead End for Editing</h2>
-        <p style="text-align: center; color: var(--color-gray-700); font-size: 1.15rem;" class="reveal">
-            When design files are lost, only a flat image remains. You cannot move elements, change colors, fix text, or reflow layouts.
-        </p>
+    <!-- TOSS-STYLE PINNED SCROLLYTELLING -->
+    <section class="toss-scrolly" id="scrolly">
+        <div class="toss-stage">
+            <div class="toss-panel" data-panel="0">
+                <span class="toss-eyebrow">The Problem</span>
+                <h2 class="toss-headline">A flat image is a dead end.</h2>
+                <p class="toss-sub">When the design file is lost, only pixels remain. You can't move an element, recolor a shape, fix a typo, or reflow the layout.</p>
+            </div>
+            <div class="toss-panel" data-panel="1">
+                <span class="toss-eyebrow">The Idea</span>
+                <h2 class="toss-headline">ReDesign grows the design back.</h2>
+                <p class="toss-sub">A vision-language controller rebuilds the layer hierarchy as a tree — coarse to fine — verifying every step until each element is atomic.</p>
+            </div>
+            <div class="toss-panel" data-panel="2">
+                <span class="toss-eyebrow">The Result</span>
+                <h2 class="toss-headline">Every element, editable again.</h2>
+                <p class="toss-sub">Text layers with real fonts, vector shapes with fills, grouped elements with z-order — recovered from a single image, ready to re-edit.</p>
+            </div>
+            <div class="toss-progress" aria-hidden="true">
+                <span class="toss-dot"></span>
+                <span class="toss-dot"></span>
+                <span class="toss-dot"></span>
+            </div>
+        </div>
     </section>
 
     <!-- WHAT WE DO -->
-    <section class="narrow reveal">
+    <section class="narrow reveal" style="margin-top: 6rem;">
         <div class="callout">
             <h3 style="margin-top: 0; text-align: center;" class="reveal">What ReDesign Does</h3>
             <p class="reveal">ReDesign recovers a fully editable design hierarchy from a single image.</p>
@@ -521,7 +667,7 @@
             <figcaption>Controller orchestrates five actions; each produces child layers. Verifier ensures no duplication, no incomplete coverage. Output: editable JSON hierarchy.</figcaption>
         </figure>
 
-        <h3 class="text-center reveal" style="margin-top: 3rem;">Five Tool-Backed Actions</h3>
+        <h3 class="text-center reveal" style="margin-top: 5.5rem;">Five Tool-Backed Actions</h3>
         <div class="action-grid reveal">
             <div class="action-card reveal">
                 <div class="action-title">Text extraction</div>
@@ -593,7 +739,7 @@
                         <td>45.33</td>
                         <td>0.527</td>
                     </tr>
-                    <tr style="background: rgba(255, 107, 107, 0.05);" class="reveal">
+                    <tr style="background: rgba(255, 74, 109, 0.05);" class="reveal">
                         <td style="text-align: left;"><strong class="text-gradient">Ours</strong></td>
                         <td class="bold-best">0.0431</td>
                         <td class="bold-best">26.286</td>
@@ -696,7 +842,7 @@
             </div>
             <div class="stat-card reveal">
                 <div class="stat-label">License</div>
-                <div class="stat-number" style="background: var(--gradient-coral); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">CC BY 4.0</div>
+                <div class="stat-number stat-license" style="background: var(--gradient-coral); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">CC BY 4.0</div>
             </div>
         </div>
         <p class="text-muted" style="font-size: 1.1rem; margin-top: 2rem;" class="reveal">
@@ -753,6 +899,80 @@
             document.addEventListener('DOMContentLoaded', setupRevealObserver);
         } else {
             requestAnimationFrame(() => setupRevealObserver());
+        }
+
+        /* ============================================
+           Toss-style pinned scrollytelling engine
+           Maps scroll progress through the tall wrapper
+           to a crossfade across the stacked panels.
+           ============================================ */
+        const setupTossScrolly = () => {
+            const scrolly = document.getElementById('scrolly');
+            if (!scrolly) return;
+
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduceMotion) return; // CSS already lays panels out statically
+
+            const stage = scrolly.querySelector('.toss-stage');
+            const panels = Array.from(scrolly.querySelectorAll('.toss-panel'));
+            const dots = Array.from(scrolly.querySelectorAll('.toss-dot'));
+            const n = panels.length;
+            if (!stage || n === 0) return;
+
+            // Switch from the static fallback layout to the pinned crossfade
+            // stage. Done in JS so no-JS users keep the readable static layout.
+            scrolly.classList.add('is-active');
+
+            const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+            const FADE = 0.7; // narrower band → cleaner crossfade, less ghosting
+            let ticking = false;
+
+            const render = () => {
+                ticking = false;
+                const rect = scrolly.getBoundingClientRect();
+                // Measure against the sticky stage (not window.innerHeight) so the
+                // vh-based wrapper height and the scroll math share one reference —
+                // avoids flicker when the mobile URL bar resizes the viewport.
+                const scrollable = scrolly.offsetHeight - stage.offsetHeight;
+                // progress 0..1 through the tall wrapper
+                const p = clamp(-rect.top / scrollable, 0, 1);
+                // position in "panel space": 0 .. n-1
+                const s = p * (n - 1);
+
+                const activeIdx = Math.round(s);
+                panels.forEach((panel, i) => {
+                    const dist = Math.abs(s - i);
+                    // Sharpen: linear ramp then square it so the dominant panel
+                    // clearly wins and adjacent panels don't ghost over each other.
+                    let opacity = clamp(1 - dist / FADE, 0, 1);
+                    opacity = opacity * opacity;
+                    // subtle vertical parallax: slides up as we move past it
+                    const ty = (s - i) * -40;
+                    panel.style.opacity = opacity.toFixed(3);
+                    panel.style.transform = `translate(-50%, calc(-50% + ${ty.toFixed(1)}px))`;
+                    // Paint the most-opaque panel on top during the crossfade.
+                    panel.style.zIndex = String(Math.round(opacity * 100));
+                });
+
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === activeIdx));
+            };
+
+            const onScroll = () => {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(render);
+                }
+            };
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+            render(); // initial paint
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupTossScrolly);
+        } else {
+            requestAnimationFrame(() => setupTossScrolly());
         }
     </script>
 </body>
