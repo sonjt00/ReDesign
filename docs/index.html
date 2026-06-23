@@ -36,7 +36,7 @@
         body {
             font-family: var(--font-body);
             font-size: 1rem;
-            line-height: 1.6;
+            line-height: 1.8;
             color: var(--color-gray-900);
             background: var(--color-white);
             margin: 0;
@@ -49,6 +49,13 @@
         .text-muted { color: var(--color-gray-600); }
         .text-primary { color: var(--color-coral-primary); }
         .text-gradient {
+            background: var(--gradient-coral);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-text {
             background: var(--gradient-coral);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -96,7 +103,7 @@
             font-family: var(--font-heading);
             font-size: 2rem;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.3;
             margin: 3rem 0 1.5rem 0;
             letter-spacing: -0.01em;
         }
@@ -125,6 +132,8 @@
             font-family: var(--font-body);
             font-weight: 400;
             letter-spacing: 0.3px;
+            line-height: 1.8;
+            margin-bottom: 1rem;
         }
 
         /* Links and buttons */
@@ -142,6 +151,17 @@
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             text-decoration: none;
+            color: inherit;
+        }
+
+        .btn:visited {
+            color: inherit;
+            background: inherit;
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--color-coral-primary);
+            outline-offset: 2px;
         }
 
         .btn-gradient {
@@ -190,8 +210,8 @@
             font-size: 0.95rem;
             font-style: italic;
             color: var(--color-gray-600);
-            line-height: 1.6;
-            margin-top: 1rem;
+            line-height: 1.7;
+            margin-top: 1.5rem;
             font-family: var(--font-body);
         }
 
@@ -236,6 +256,8 @@
         .bold-best {
             font-weight: 700;
             color: var(--color-coral-primary);
+            border-bottom: 3px solid var(--color-coral-primary);
+            padding-bottom: 3px;
         }
 
         /* Callout box */
@@ -272,6 +294,18 @@
             border-top: 4px solid transparent;
             border-image: var(--gradient-coral) 1;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(255, 87, 34, 0.05) 100%);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card:hover .stat-label {
+            color: var(--color-coral-primary);
+            font-weight: 700;
         }
 
         .stat-number {
@@ -291,6 +325,7 @@
             margin: 0;
             font-family: var(--font-body);
             font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         /* Action cards */
@@ -301,11 +336,15 @@
             margin: 2rem 0;
         }
 
+        .action-grid.six-col {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
         .action-card {
             background: var(--color-white);
             border: 2px solid var(--color-gray-200);
             border-radius: var(--radius);
-            padding: 2rem 1.5rem;
+            padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
         }
@@ -318,7 +357,7 @@
 
         .action-title {
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1rem;
             margin-bottom: 0.75rem;
             color: var(--color-gray-900);
             font-family: var(--font-heading);
@@ -329,9 +368,16 @@
         }
 
         .action-desc {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--color-gray-600);
             line-height: 1.5;
+            font-family: var(--font-body);
+        }
+
+        .action-desc-small {
+            font-size: 0.8rem;
+            color: var(--color-gray-600);
+            line-height: 1.4;
             font-family: var(--font-body);
         }
 
@@ -397,6 +443,12 @@
             transform: translateY(0);
         }
 
+        /* Negative tone heading */
+        .negative-tone {
+            color: #6c757d;
+            font-weight: 600;
+        }
+
         /* Footer */
         footer {
             background: var(--color-gray-50);
@@ -418,6 +470,9 @@
             .action-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+            .action-grid.six-col {
+                grid-template-columns: repeat(3, 1fr);
+            }
             .benchmark-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -432,6 +487,9 @@
             .action-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .action-grid.six-col {
+                grid-template-columns: repeat(2, 1fr);
+            }
             .benchmark-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -444,6 +502,9 @@
             h1 { font-size: 2rem; }
             h2 { font-size: 1.25rem; }
             .action-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-grid.six-col {
                 grid-template-columns: 1fr;
             }
             .benchmark-grid {
@@ -500,78 +561,113 @@
     </header>
 
     <!-- PROBLEM SECTION -->
-    <section class="container narrow">
-        <h2 class="text-gradient text-center">A Flat Image Is a Dead End for Editing</h2>
-        <p style="line-height: 1.8; text-align: justify; font-size: 1.05rem;">
-            A rendered design image is locked in pixels. You can't move elements, change colors, fix text, or reflow the layout. The image doesn't tell you which pixels form which object, what created them, or how they stack.
+    <section class="container narrow reveal">
+        <h2 class="negative-tone text-center" style="color: #9ca3af;">A Flat Image Is a Dead End for Editing</h2>
+        <p style="text-align: justify;">
+            When design files are lost, only a flat image remains.<br>
+            You cannot move elements, change colors, fix text, or reflow layouts.<br>
+            <br>
+            The image holds no semantic information; it doesn't say which pixels form which object, what created them, or how they layer.
         </p>
     </section>
 
     <!-- WHAT WE DO -->
-    <section class="container narrow">
+    <section class="container narrow reveal">
         <div class="callout">
             <h3 style="margin-top: 0; text-align: center; color: var(--color-coral-primary);">What ReDesign Does</h3>
             <p>
-                <strong>ReDesign recovers a fully editable design hierarchy from a single image.</strong> A VLM controller grows a layer tree breadth-first, choosing tool-backed actions and verifying every step. The output is editable: semantic text layers with real fonts, vector shapes with fills, groups with z-order, and isolated elements that survive edits — delete, recolor, rotate — without disturbing the rest of the design.
+                <strong>ReDesign recovers a fully editable design hierarchy from a single image.</strong>
+            </p>
+            <p>
+                A vision-language controller grows a layer tree breadth-first; a verifier checks every step. The output: semantic text layers with real fonts, vector shapes with fills, groups with z-order, and isolated elements that survive real edits (delete, recolor, rotate, transition) without disturbing the rest of the design.
+            </p>
+            <p style="margin-bottom: 0;">
+                Instead of pixel-space edits that blur and corrupt, ReDesign exposes discrete, editable elements.
             </p>
         </div>
     </section>
 
     <!-- TEASER FIGURE -->
-    <section class="figure-wrapper container narrow">
+    <section class="figure-wrapper container narrow reveal">
         <figure style="text-align: center;">
             <img src="assets/figures/intro_teaser.webp" alt="ReDesign: from flat image to editable design" style="max-width: 100%; display: inline-block;">
-            <figcaption>From flat image to editable design: text layers, vector shapes, groups, and z-order that respond to real edits.</figcaption>
+            <figcaption>From flat image to editable design: text layers with real fonts, vector shapes with colors, groups with z-order, and elements that respond to real design edits.</figcaption>
         </figure>
     </section>
 
     <!-- METHOD SECTION -->
     <section class="container narrow">
-        <h2 class="text-gradient text-center">The Agentic Approach: Grow the Tree</h2>
-        <p style="line-height: 1.8; font-size: 1.05rem; text-align: justify;">
-            Starting from the whole image as the root, a VLM controller expands breadth-first. At each node, it picks a tool-backed action; a verifier checks validity—accepting, pruning, or retrying—until every leaf is atomic and editable.
+        <h2 class="text-gradient text-center reveal">The Agentic Approach: Grow the Tree</h2>
+        <p style="line-height: 1.8; font-size: 1.05rem; text-align: justify;" class="reveal">
+            Starting from the whole image as root, a VLM controller expands breadth-first (coarse to fine).<br>
+            <br>
+            At each node: choose one tool-backed action; a verifier checks validity (accept, prune, or retry).<br>
+            <br>
+            Repeat until every leaf is atomic and editable.
         </p>
 
-        <div class="figure-wrapper" style="margin-top: 2rem;">
+        <div class="figure-wrapper reveal" style="margin-top: 2rem;">
             <figure>
-                <img src="assets/figures/method_main.webp" alt="Agentic tree expansion with 5 tool actions and verification" style="max-width: 100%;">
-                <figcaption>Tree growth: controller → action space → graceful verification. Five tool-backed actions decompose designs into editable layers.</figcaption>
+                <img src="assets/figures/method_main.webp" alt="Agentic tree expansion with tool actions and verification">
+                <figcaption>Controller orchestrates five actions: each produces child layers. Verifier ensures no duplication, no incomplete coverage. Output: editable JSON hierarchy.</figcaption>
             </figure>
         </div>
 
         <h3 style="text-align: center; margin-top: 2.5rem; margin-bottom: 2rem;">Five Tool-Backed Actions</h3>
-        <div class="action-grid">
-            <div class="action-card reveal">
-                <div class="action-title">Extract Text</div>
-                <div class="action-desc">OCR + font recognition + segmentation + inpainting</div>
+        <div class="action-grid reveal">
+            <div class="action-card">
+                <div class="action-title">Text extraction</div>
+                <div class="action-desc-small">
+                    PaddleOCR (text)<br>
+                    Font recognition<br>
+                    Hi-SAM (segmentation)<br>
+                    LaMa (inpaint)
+                </div>
             </div>
-            <div class="action-card reveal">
-                <div class="action-title">Fork Layers</div>
-                <div class="action-desc">Qwen-Image-Layered → z-ordered RGBA layers</div>
+            <div class="action-card">
+                <div class="action-title">Multi-layer decomposition</div>
+                <div class="action-desc-small">
+                    Qwen-Image-Layered<br>
+                    <br>
+                    Z-ordered RGBA layers
+                </div>
             </div>
-            <div class="action-card reveal">
-                <div class="action-title">Split</div>
-                <div class="action-desc">Connected-component analysis → disjoint elements</div>
+            <div class="action-card">
+                <div class="action-title">Connected Component Labeling</div>
+                <div class="action-desc-small">
+                    CCA analysis<br>
+                    <br>
+                    Disjoint elements
+                </div>
             </div>
-            <div class="action-card reveal">
-                <div class="action-title">Detect & Segment</div>
-                <div class="action-desc">Grounding + segmentation + inpainting</div>
+            <div class="action-card">
+                <div class="action-title">Detection & Segmentation</div>
+                <div class="action-desc-small">
+                    GroundingDINO<br>
+                    SAM 2<br>
+                    LaMa (inpaint)
+                </div>
             </div>
-            <div class="action-card reveal">
-                <div class="action-title">Vectorize</div>
-                <div class="action-desc">VTracer → vector paths or raster leaves</div>
+            <div class="action-card">
+                <div class="action-title">Vectorization & Typography</div>
+                <div class="action-desc-small">
+                    VTracer (vector)<br>
+                    <br>
+                    Photos (raster)
+                </div>
             </div>
         </div>
     </section>
 
     <!-- RESULTS: PARSING ACCURACY (QUANTITATIVE) -->
     <section class="container narrow">
-        <h2 class="text-gradient text-center">Reconstruction Accuracy</h2>
-        <p style="text-align: center; line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;">
-            Figma-909 benchmark: 909 real-world designs. ReDesign wins on every metric.
+        <h2 class="text-gradient text-center reveal">Reconstruction Accuracy</h2>
+        <p style="text-align: center; line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;" class="reveal">
+            Figma-909 benchmark; 909 real-world designs.<br>
+            ReDesign wins on every metric.
         </p>
 
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto;" class="reveal">
             <table class="narrow">
                 <thead>
                     <tr>
@@ -633,54 +729,86 @@
     <section class="container narrow reveal">
         <h2 class="text-gradient text-center mb-5">Per-Element Reconstruction</h2>
         <figure class="figure-wrapper">
-            <img src="assets/figures/exp_accuracy_quali.webp" alt="Per-element reconstruction quality across methods">
-            <figcaption>Highlighted elements: ReDesign recovers clean, complete layers. Baselines miss, break, or distort them.</figcaption>
+            <img src="assets/figures/exp_accuracy_quali.webp" alt="Per-element reconstruction across methods">
+            <figcaption>Each row shows a design input (left) and output under each method. Highlighted elements (green box): ReDesign recovers them cleanly and completely; baselines miss, break, or distort them.</figcaption>
         </figure>
     </section>
 
-    <!-- RESULTS: EDITABILITY (QUANTITATIVE) -->
+    <!-- RESULTS: EDITABILITY -->
     <section class="section-band">
         <div class="container narrow">
-            <h2 class="text-gradient text-center">Editability: Structure That Survives Edits</h2>
-            <p class="text-center" style="line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;">
-                Six atomic edits (delete, opacity, recolor, rotation, transition, z-order): ReDesign dominates on all axes.
+            <h2 class="text-gradient text-center reveal">Editability: Structure That Survives Edits</h2>
+            <p class="text-center" style="line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;" class="reveal">
+                Six atomic edits on predicted designs; measured against ground truth.
             </p>
+
+            <h3 style="text-align: center; margin-bottom: 2rem;" class="reveal">Edit Types Tested</h3>
+            <div class="action-grid six-col reveal">
+                <div class="action-card">
+                    <div class="action-title">Delete</div>
+                    <div class="action-desc-small">Remove element</div>
+                </div>
+                <div class="action-card">
+                    <div class="action-title">Opacity</div>
+                    <div class="action-desc-small">Change transparency</div>
+                </div>
+                <div class="action-card">
+                    <div class="action-title">Recolor</div>
+                    <div class="action-desc-small">Change fill color</div>
+                </div>
+                <div class="action-card">
+                    <div class="action-title">Rotation</div>
+                    <div class="action-desc-small">Rotate element</div>
+                </div>
+                <div class="action-card">
+                    <div class="action-title">Transition</div>
+                    <div class="action-desc-small">Add animation</div>
+                </div>
+                <div class="action-card">
+                    <div class="action-title">Z-Order</div>
+                    <div class="action-desc-small">Change layer depth</div>
+                </div>
+            </div>
+
             <figure class="figure-wrapper reveal">
-                <img src="assets/figures/exp_editability_quanti.webp" alt="Editability metrics across 6 atomic edits">
-                <figcaption>SSIM after edit replay: ReDesign's orange/red line is highest on all dimensions. Text recall also best.</figcaption>
+                <img src="assets/figures/exp_editability_quanti.webp" alt="Editability metrics across atomic edits">
+                <figcaption>(a) SSIM after edit replay; ReDesign (orange/red line) is highest on all axes. (b) Text recall after text edits; ReDesign dominates. Results show structure survives diverse real edits.</figcaption>
             </figure>
         </div>
     </section>
 
     <!-- RESULTS: EDITABILITY (QUALITATIVE) -->
     <section class="container narrow">
-        <h2 class="text-gradient text-center">Edit Examples: Before & After</h2>
-        <p class="text-center" style="line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;">
-            ReDesign applies edits cleanly to the correct element. Baselines move wrong regions or corrupt the layout.
+        <h2 class="text-gradient text-center reveal">Edit Examples: Before & After</h2>
+        <p class="text-center" style="line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;" class="reveal">
+            ReDesign applies each edit cleanly to the correct element.<br>
+            Baselines move wrong regions or corrupt the layout.
         </p>
         <figure class="figure-wrapper reveal">
             <img src="assets/figures/exp_edit_quali.webp" alt="Qualitative edit examples">
-            <figcaption>Ground-truth edit (left) vs. each method's output. ReDesign preserves layout integrity.</figcaption>
+            <figcaption>Each row: ground-truth edit (left) vs. output under each method. ReDesign's edits are precise and preserve layout integrity; baselines fail or distort.</figcaption>
         </figure>
     </section>
 
     <!-- ANALYSIS: VS GENERATIVE EDITING -->
     <section class="section-band">
         <div class="container narrow">
-            <h2 class="text-gradient text-center">Why Structure Beats Pixel Regeneration</h2>
-            <p class="text-center" style="line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem; max-width: 900px; margin-left: auto; margin-right: auto;">
-                Generative editors (like Nano Banana 2) edit pixel-space: instructions leak, layouts blur, precision fails. ReDesign exposes discrete layers with explicit position and rotation—so edits execute exactly.
+            <h2 class="text-gradient text-center reveal">Why Structure Beats Pixel Regeneration</h2>
+            <p class="text-center" style="line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem; max-width: 900px; margin-left: auto; margin-right: auto;" class="reveal">
+                Generative editors (Nano Banana 2) edit pixel-space: instructions leak, layouts blur, precision fails.<br>
+                <br>
+                ReDesign exposes discrete layers with explicit position and rotation; edits execute exactly.
             </p>
             <figure class="figure-wrapper reveal">
-                <img src="assets/figures/analysis_nanobanana_failure.webp" alt="ReDesign vs Nano Banana 2 precision">
-                <figcaption>Same three instructions: ReDesign (green, top) executes precisely. Nano Banana 2 (red, bottom) misplaces and corrupts.</figcaption>
+                <img src="assets/figures/analysis_nanobanana_failure.webp" alt="ReDesign vs generative editor precision">
+                <figcaption>Three move/rotate instructions: ReDesign (green, top) executes each precisely on the isolated layer. Nano Banana 2 (red, bottom) misplaces and corrupts surrounding design.</figcaption>
             </figure>
         </div>
     </section>
 
     <!-- FIGMA-909 BENCHMARK -->
     <section class="container narrow text-center">
-        <h2 class="text-gradient mb-5">Figma-909: The Benchmark</h2>
+        <h2 class="text-gradient mb-5 reveal">Figma-909: The Benchmark</h2>
         <div class="benchmark-grid">
             <div class="stat-card reveal">
                 <div class="stat-label">Real-World Frames</div>
@@ -699,21 +827,22 @@
                 <div class="stat-number" style="background: var(--gradient-coral); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 1.3rem;">CC BY 4.0</div>
             </div>
         </div>
-        <p class="text-muted" style="font-size: 0.95rem; margin-top: 2rem;">
-            All 909 frames redistributed under CC BY 4.0 with full attribution. <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" target="_blank">Download on HuggingFace</a>.
+        <p class="text-muted" style="font-size: 0.95rem; margin-top: 2rem; line-height: 1.8;" class="reveal">
+            All 909 frames redistributed under CC BY 4.0 with full attribution.<br>
+            <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" target="_blank">Download on HuggingFace</a>.
         </p>
     </section>
 
     <!-- FOOTER -->
     <footer>
         <div class="container narrow">
-            <h2 class="text-gradient text-center mb-4">Get Started</h2>
-            <div class="text-center mb-5">
+            <h2 class="text-gradient text-center mb-4 reveal">Get Started</h2>
+            <div class="text-center mb-5 reveal">
                 <a href="https://openreview.net/pdf?id=JiEr8B3WBr" class="btn btn-gradient" style="margin: 0.5rem;">📄 Paper</a>
                 <a href="https://github.com/sonjt00/ReDesign" class="btn btn-outline" style="margin: 0.5rem;">💻 Code</a>
                 <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" class="btn btn-outline" style="margin: 0.5rem;">📊 Dataset</a>
             </div>
-            <div class="footer-text">
+            <div class="footer-text reveal">
                 <p>ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition</p>
                 <p style="font-size: 0.9rem; color: var(--color-gray-500);">
                     Figma-909: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color: var(--color-gray-500);">CC BY 4.0</a> ·
