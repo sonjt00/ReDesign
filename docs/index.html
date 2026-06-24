@@ -408,8 +408,8 @@
         /* Reveal animations */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(42px);
+            transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform, opacity;
         }
 
@@ -462,14 +462,14 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.8s ease, visibility 0s linear 0.8s !important;
+            transition: opacity 1.2s ease, visibility 0s linear 1.2s !important;
         }
         html.fp-on #fp > .fp-current {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
             z-index: 2;
-            transition: opacity 0.8s ease, visibility 0s !important;
+            transition: opacity 1.2s ease, visibility 0s !important;
         }
         html.fp-on #fp > header::-webkit-scrollbar,
         html.fp-on #fp > section::-webkit-scrollbar,
@@ -920,10 +920,29 @@
 
             document.documentElement.classList.add('fp-on');
 
+            // Pretty per-panel background sequence (afterglow: coral → pink →
+            // lilac → periwinkle → sky → back). Each panel a distinct soft
+            // gradient, so every crossfade also shifts the whole backdrop.
+            const BGS = [
+                'linear-gradient(160deg,#ffffff 0%,#fff0f1 100%)',
+                'linear-gradient(160deg,#fff1f3 0%,#ffe0e7 100%)',
+                'linear-gradient(160deg,#ffe9f1 0%,#ffd6e6 100%)',
+                'linear-gradient(160deg,#fbe5f6 0%,#efd9fb 100%)',
+                'linear-gradient(160deg,#efe7fd 0%,#e0d9fb 100%)',
+                'linear-gradient(160deg,#e7eaff 0%,#d6deff 100%)',
+                'linear-gradient(160deg,#e3f0ff 0%,#cfe4ff 100%)',
+                'linear-gradient(160deg,#e9f5ff 0%,#dbefff 100%)',
+                'linear-gradient(160deg,#eee9ff 0%,#e2daff 100%)',
+                'linear-gradient(160deg,#fbe9f3 0%,#f5d9ea 100%)',
+                'linear-gradient(160deg,#fff0ec 0%,#ffdfe0 100%)',
+                'linear-gradient(160deg,#ffffff 0%,#edf1ff 100%)',
+            ];
+            panels.forEach((p, i) => { p.style.background = BGS[i % BGS.length]; });
+
             let current = 0;
             let animating = false;
             let animTimer = null;
-            const DURATION = 800; // keep in sync with CSS transition (0.8s)
+            const DURATION = 1200; // keep in sync with CSS transition (1.2s)
 
             const clampIdx = (i) => Math.max(0, Math.min(panels.length - 1, i));
             const apply = () => {
@@ -933,8 +952,11 @@
                 // mobile dvh drift.
                 panels.forEach((p, i) => p.classList.toggle('fp-current', i === current));
             };
-            const reveal = (panel) => {
+            const revealIn = (panel) => {
                 panel.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
+            };
+            const revealReset = (panel) => {
+                panel.querySelectorAll('.reveal').forEach(el => el.classList.remove('is-in'));
             };
 
             // Right-side pagination dots
@@ -952,6 +974,13 @@
             }
             const updateDots = () => dots.forEach((d, i) => d.classList.toggle('active', i === current));
 
+            // Called once a transition settles: unlock + reset every hidden
+            // panel's reveals so its text re-animates next time it's shown.
+            const settle = () => {
+                animating = false;
+                panels.forEach((p, idx) => { if (idx !== current) revealReset(p); });
+            };
+
             function goTo(i) {
                 i = clampIdx(i);
                 if (i === current || animating) return;
@@ -959,11 +988,11 @@
                 const panel = panels[i];
                 panel.scrollTop = 0;            // arrive at the top of the new panel
                 apply();
-                reveal(panel);
+                revealIn(panel);
                 updateDots();
                 animating = true;
                 clearTimeout(animTimer);
-                animTimer = setTimeout(() => { animating = false; }, DURATION);
+                animTimer = setTimeout(settle, DURATION);
             }
 
             // Can the current panel still scroll inside, in this direction?
@@ -983,7 +1012,7 @@
                     // re-arm the lock on each so it only releases once the
                     // wheel goes quiet — prevents one fling chaining 2 panels.
                     clearTimeout(animTimer);
-                    animTimer = setTimeout(() => { animating = false; }, DURATION);
+                    animTimer = setTimeout(settle, DURATION);
                     return;
                 }
                 if (atEdge(panels[current], dir)) {
@@ -1029,7 +1058,7 @@
             window.addEventListener('keydown', onKey);
 
             apply();
-            reveal(panels[0]);
+            revealIn(panels[0]);
             updateDots();
             return true;
         };
