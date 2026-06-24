@@ -773,11 +773,12 @@
             font-family: var(--font-heading); font-weight: 700; font-size: 0.82rem; color: var(--color-gray-700);
         }
         .pg-modes button.active { background: var(--gradient-coral); color: #fff; }
-        .pg-hint { font-size: 0.78rem; color: var(--color-gray-500); }
+        .pg-hint { display: block; font-size: 0.92rem; line-height: 1.42; color: #1c1d2b; font-weight: 700; }
+        .pg-hint .pg-hint-2 { display: block; margin-top: 0.22rem; font-size: 0.84rem; font-weight: 600; color: var(--color-gray-700); }
         .pg-reset {
-            margin-left: auto; border: 1.5px solid var(--color-gray-300); background: #fff; border-radius: 8px;
-            padding: 0.42rem 0.85rem; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem;
-            color: var(--color-gray-700); cursor: pointer;
+            width: 100%; border: 1.5px solid var(--color-gray-300); background: #fff; border-radius: 9px;
+            padding: 0.55rem 0; font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem;
+            color: var(--color-gray-700); cursor: pointer; transition: all .15s;
         }
         .pg-reset:hover { border-color: var(--color-coral-primary); color: var(--color-coral-primary); }
 
@@ -829,7 +830,7 @@
         .pg-del { width: 100%; border: 1.5px solid #ffd0d8; background: #fff5f7; color: #d6193f; border-radius: 9px;
             padding: 0.55rem 0; font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem; cursor: pointer; }
         .pg-del:hover { background: #ffe0e6; }
-        .pg-side.disabled { opacity: 0.45; pointer-events: none; }
+        .pg-side.disabled .pg-ctl, .pg-side.disabled .pg-del { opacity: 0.45; pointer-events: none; }
         .pg-empty-note { font-size: 0.82rem; color: var(--color-gray-500); line-height: 1.5; }
 
         @media (max-width: 860px) {
@@ -880,8 +881,7 @@
             <div class="pg-editor reveal">
                 <div class="pg-stage-col">
                     <div class="pg-toolbar">
-                        <span class="pg-hint" id="pgHint">Click an element to select &middot; drag to move &middot; use the handle to rotate.</span>
-                        <button class="pg-reset" id="pgReset" type="button">Reset</button>
+                        <span class="pg-hint" id="pgHint">Click an element to select &middot; drag to move &middot; use the handle to rotate.<span class="pg-hint-2">On the right, adjust the selected element&rsquo;s opacity, rotation, scale, color, and z-order &mdash; or delete it.</span></span>
                     </div>
                     <div class="pg-stage-outer" id="pgStageOuter">
                         <div class="pg-stage" id="pgStage"></div>
@@ -915,6 +915,7 @@
                         </div>
                     </div>
                     <button class="pg-del" id="pgDelete" type="button">🗑 Delete element</button>
+                    <button class="pg-reset" id="pgReset" type="button">↺ Reset</button>
                 </aside>
             </div>
         </div>
