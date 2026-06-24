@@ -1668,6 +1668,30 @@
         function boxesOverlap(a, b) {
             return a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
         }
+        // True only if the two elements' actual MASKS share a pixel (not just
+        // their bounding boxes) — samples a grid over the boxes' intersection.
+        function masksOverlap(a, c) {
+            const A = elBox(a), C = elBox(c);
+            if (!boxesOverlap(A, C)) return false;
+            if (!a.mask || !c.mask) return true; // masks not ready → bbox fallback
+            const ix0 = Math.max(A.l, C.l), iy0 = Math.max(A.t, C.t);
+            const ix1 = Math.min(A.r, C.r), iy1 = Math.min(A.b, C.b);
+            const N = 28;
+            for (let i = 0; i <= N; i++) {
+                const px = ix0 + (ix1 - ix0) * i / N;
+                const au = Math.floor((px - A.l) / (A.r - A.l) * a.aw);
+                const cu = Math.floor((px - C.l) / (C.r - C.l) * c.aw);
+                if (au < 0 || au >= a.aw || cu < 0 || cu >= c.aw) continue;
+                for (let j = 0; j <= N; j++) {
+                    const py = iy0 + (iy1 - iy0) * j / N;
+                    const av = Math.floor((py - A.t) / (A.b - A.t) * a.ah);
+                    const cv = Math.floor((py - C.t) / (C.b - C.t) * c.ah);
+                    if (av < 0 || av >= a.ah || cv < 0 || cv >= c.ah) continue;
+                    if (a.mask[av * a.aw + au] && c.mask[cv * c.aw + cu]) return true;
+                }
+            }
+            return false;
+        }
 
         // Move one z-step RELATIVE TO OVERLAPPING ELEMENTS ONLY: swap z with the
         // nearest element that (a) shares space with the selected one and
@@ -1675,17 +1699,24 @@
         function bumpZ(dir) {
             if (sel < 0) return;
             const cur = els[sel];
-            const curBox = elBox(cur);
             let target = null;
             for (const o of els) {
                 if (o === cur || o.deleted) continue;
                 if (!(dir > 0 ? o.z > cur.z : o.z < cur.z)) continue;
-                if (!boxesOverlap(curBox, elBox(o))) continue;       // only overlapping
+                if (!masksOverlap(cur, o)) continue;                 // only truly overlapping
                 if (!target || (dir > 0 ? o.z < target.z : o.z > target.z)) target = o;
             }
-            if (!target) return; // nothing overlapping above/below → already on top/bottom of its stack
-            const tmp = cur.z; cur.z = target.z; target.z = tmp;
-            applyEl(cur); applyEl(target);
+            if (!target) return; // nothing overlapping above/below → already top/bottom of its stack
+            // INSERT (not swap): move cur into the target's slot and shift the
+            // block between them by one, so every other element keeps its order.
+            const newZ = target.z, oldZ = cur.z;
+            for (const o of els) {
+                if (o === cur) continue;
+                if (dir > 0) { if (o.z > oldZ && o.z <= newZ) { o.z -= 1; applyEl(o); } }   // Front: cur rises above target
+                else { if (o.z >= newZ && o.z < oldZ) { o.z += 1; applyEl(o); } }            // Back: cur drops below target
+            }
+            cur.z = newZ;
+            applyEl(cur);
         }
         document.getElementById('pgFront').addEventListener('click', () => bumpZ(1));
         document.getElementById('pgBack').addEventListener('click', () => bumpZ(-1));
