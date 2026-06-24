@@ -784,7 +784,13 @@
         }
         .pg-el { position: absolute; pointer-events: none; }
         .pg-el > img { width: 100%; height: 100%; display: block; pointer-events: none; -webkit-user-drag: none; }
-        .pg-el.selected { outline: 2px solid var(--color-coral-primary); outline-offset: 0; box-shadow: 0 0 0 4px rgba(255,74,109,.18); }
+        /* selection traces the element's actual mask silhouette (alpha) in pink,
+           not the rectangular bbox */
+        .pg-el.selected > img {
+            filter:
+                drop-shadow(0 0 1.5px #ff2d8b) drop-shadow(0 0 1.5px #ff2d8b)
+                drop-shadow(0 0 1.5px #ff2d8b) drop-shadow(0 0 1px #ff2d8b);
+        }
         .pg-tint {
             position: absolute; inset: 0; opacity: 0; pointer-events: none;
             -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
