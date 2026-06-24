@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stop mobile browsers from auto-linking emails (which adds underlines) -->
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
     <meta name="description" content="ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition">
     <title>ReDesign – Editable Design Recovery from Images</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,9 +191,11 @@
             font-size: 1.22rem;
             color: #1c1d2b;
         }
-        .hero-authors .email {
+        .hero-authors .email,
+        .hero-authors a.email:hover {
             font-size: 0.92rem;
             color: var(--color-coral-primary);
+            text-decoration: none;
         }
         .author-mark {
             color: var(--color-coral-primary);
@@ -849,14 +853,14 @@
         </div>
         <div class="hero-authors reveal">
             <div class="author-row">
-                <span class="author"><span class="name">Jooyeol Yun<sup class="author-mark">*</sup></span><span class="email">blizzard072@kaist.ac.kr</span></span>
-                <span class="author"><span class="name">Jintae Park<sup class="author-mark">*</sup></span><span class="email">sonjt00@kaist.ac.kr</span></span>
-                <span class="author"><span class="name">Hyesu Lim</span><span class="email">hyesulim.ac@gmail.com</span></span>
-                <span class="author"><span class="name">Junha Hyung</span><span class="email">sharpeeee@kaist.ac.kr</span></span>
+                <span class="author"><span class="name">Jooyeol Yun<sup class="author-mark">*</sup></span><a class="email" href="mailto:blizzard072@kaist.ac.kr">blizzard072@kaist.ac.kr</a></span>
+                <span class="author"><span class="name">Jintae Park<sup class="author-mark">*</sup></span><a class="email" href="mailto:sonjt00@kaist.ac.kr">sonjt00@kaist.ac.kr</a></span>
+                <span class="author"><span class="name">Hyesu Lim</span><a class="email" href="mailto:hyesulim.ac@gmail.com">hyesulim.ac@gmail.com</a></span>
+                <span class="author"><span class="name">Junha Hyung</span><a class="email" href="mailto:sharpeeee@kaist.ac.kr">sharpeeee@kaist.ac.kr</a></span>
             </div>
             <div class="author-row">
                 <span class="author"><span class="name">Hyungjin Chung</span><span class="email">{Placeholder}@korea.ac.kr</span></span>
-                <span class="author"><span class="name">Jaegul Choo</span><span class="email">jchoo@kaist.ac.kr</span></span>
+                <span class="author"><span class="name">Jaegul Choo</span><a class="email" href="mailto:jchoo@kaist.ac.kr">jchoo@kaist.ac.kr</a></span>
             </div>
             <div class="author-note"><sup class="author-mark">*</sup> Equal contribution</div>
         </div>
@@ -937,7 +941,7 @@
     </section>
 
     <!-- WHAT REDESIGN DOES + INTRO FIGURE -->
-    <section class="narrow text-center">
+    <section class="narrow text-center fp-center">
         <h2 class="reveal">What ReDesign Does</h2>
         <p class="reveal whatwedo-lead">ReDesign recovers a fully editable design hierarchy from a single image.<br>A vision-language controller grows a layer tree breadth-first and a verifier checks every step,<br>producing semantic text layers with real fonts, vector shapes with fills, grouped elements with z-order, and isolated elements that survive real edits without disturbing the rest of the design.</p>
         <figure class="reveal intro-fig" style="margin-top: 3.2rem;">
@@ -946,7 +950,7 @@
     </section>
 
     <!-- METHOD SECTION -->
-    <section class="narrow method-panel">
+    <section class="narrow method-panel fp-center">
         <h2 class="text-center reveal">The Agentic Approach: Grow the Tree</h2>
         <p style="text-align: center; font-size: 1.02rem;" class="reveal">
             Starting from the whole image as the root, a VLM controller expands an editable layer hierarchy<br>by selecting and composing specialized tool actions across modalities,<br>checking the validity of each editable element, and repeating until every element is atomic and editable.
