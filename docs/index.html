@@ -1657,19 +1657,33 @@
             els[sel].color = null;
             applyEl(els[sel]);
         });
-        // Move one step in z-order by swapping z with the nearest neighbour
-        // above (forward) or below (back) — not jumping to the very front/back.
+        // Current axis-aligned box of an element in stage px (position + scale).
+        function elBox(o) {
+            const sw = stage.clientWidth, sh = stage.clientHeight, sc = o.scale || 1;
+            const w = o.w / 100 * sw, h = o.h / 100 * sh;
+            const cx = o.x / 100 * sw + w / 2, cy = o.y / 100 * sh + h / 2;
+            const hw = w * sc / 2, hh = h * sc / 2;
+            return { l: cx - hw, t: cy - hh, r: cx + hw, b: cy + hh };
+        }
+        function boxesOverlap(a, b) {
+            return a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+        }
+
+        // Move one z-step RELATIVE TO OVERLAPPING ELEMENTS ONLY: swap z with the
+        // nearest element that (a) shares space with the selected one and
+        // (b) sits just above (Front) / just below (Back) it in z-order.
         function bumpZ(dir) {
             if (sel < 0) return;
             const cur = els[sel];
+            const curBox = elBox(cur);
             let target = null;
             for (const o of els) {
                 if (o === cur || o.deleted) continue;
-                if (dir > 0 ? (o.z > cur.z) : (o.z < cur.z)) {
-                    if (!target || (dir > 0 ? o.z < target.z : o.z > target.z)) target = o;
-                }
+                if (!(dir > 0 ? o.z > cur.z : o.z < cur.z)) continue;
+                if (!boxesOverlap(curBox, elBox(o))) continue;       // only overlapping
+                if (!target || (dir > 0 ? o.z < target.z : o.z > target.z)) target = o;
             }
-            if (!target) return; // already at the top / bottom
+            if (!target) return; // nothing overlapping above/below → already on top/bottom of its stack
             const tmp = cur.z; cur.z = target.z; target.z = tmp;
             applyEl(cur); applyEl(target);
         }
