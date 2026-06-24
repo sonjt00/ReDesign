@@ -735,6 +735,103 @@
             }
             .reveal { opacity: 1; transform: none; }
         }
+        /* ============================================
+           Edit Playground
+           ============================================ */
+        .pg-panel { padding-top: 4.5vh !important; padding-bottom: 3.5vh !important; }
+        .pg { width: 100%; max-width: 1180px; }
+        .pg-sub { text-align: center; color: var(--color-gray-600); font-size: 1rem; margin: 0 auto 1.1rem; max-width: 760px; }
+
+        .pg-previews {
+            display: flex; gap: 0.7rem; overflow-x: auto; padding: 0.3rem 0.2rem 0.9rem;
+            scrollbar-width: thin;
+        }
+        .pg-thumb {
+            flex: 0 0 auto; width: 116px; height: 84px; padding: 0; border: 2px solid var(--color-gray-200);
+            border-radius: 10px; overflow: hidden; cursor: pointer; background: #fff; line-height: 0;
+            transition: border-color .2s, transform .2s, box-shadow .2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pg-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pg-thumb:hover { border-color: var(--color-coral-primary); transform: translateY(-2px); }
+        .pg-thumb.active { border-color: var(--color-coral-primary); box-shadow: 0 0 0 3px rgba(255,74,109,.22); }
+
+        .pg-editor { display: flex; gap: 1.1rem; align-items: stretch; margin-top: 0.5rem; }
+        .pg-stage-col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+        .pg-toolbar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.55rem; }
+        .pg-modes { display: inline-flex; border: 1.5px solid var(--color-gray-300); border-radius: 9px; overflow: hidden; }
+        .pg-modes button {
+            padding: 0.42rem 0.95rem; border: 0; background: #fff; cursor: pointer;
+            font-family: var(--font-heading); font-weight: 700; font-size: 0.82rem; color: var(--color-gray-700);
+        }
+        .pg-modes button.active { background: var(--gradient-coral); color: #fff; }
+        .pg-hint { font-size: 0.78rem; color: var(--color-gray-500); }
+        .pg-reset {
+            margin-left: auto; border: 1.5px solid var(--color-gray-300); background: #fff; border-radius: 8px;
+            padding: 0.42rem 0.85rem; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem;
+            color: var(--color-gray-700); cursor: pointer;
+        }
+        .pg-reset:hover { border-color: var(--color-coral-primary); color: var(--color-coral-primary); }
+
+        .pg-stage-outer {
+            flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+            min-height: 0; border-radius: 12px; padding: 10px;
+            background:
+                linear-gradient(45deg, #f1f3f6 25%, transparent 25%) -8px 0 / 16px 16px,
+                linear-gradient(-45deg, #f1f3f6 25%, transparent 25%) -8px 0 / 16px 16px,
+                linear-gradient(45deg, transparent 75%, #f1f3f6 75%) -8px 0 / 16px 16px,
+                linear-gradient(-45deg, transparent 75%, #f1f3f6 75%) -8px 0 / 16px 16px,
+                #ffffff;
+        }
+        .pg-stage {
+            position: relative; background: #fff; box-shadow: var(--shadow); overflow: hidden;
+            user-select: none; touch-action: none; flex: 0 0 auto;
+        }
+        .pg-el { position: absolute; cursor: pointer; }
+        .pg-el > img { width: 100%; height: 100%; display: block; pointer-events: none; -webkit-user-drag: none; }
+        .pg-el.selected { outline: 2px solid var(--color-coral-primary); outline-offset: 0; box-shadow: 0 0 0 4px rgba(255,74,109,.18); }
+        .pg-tint {
+            position: absolute; inset: 0; opacity: 0; pointer-events: none;
+            -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+            -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+        }
+        .pg-el.object .pg-tint { mix-blend-mode: color; }
+        .pg-el .pg-rot {
+            position: absolute; left: 50%; top: -26px; width: 14px; height: 14px; margin-left: -7px;
+            background: var(--color-coral-primary); border: 2px solid #fff; border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,.3); cursor: grab; display: none;
+        }
+        .pg-el .pg-rot::before { content: ''; position: absolute; left: 50%; top: 12px; width: 2px; height: 14px; margin-left: -1px; background: var(--color-coral-primary); }
+        .pg-el.selected.rot-mode .pg-rot { display: block; }
+
+        .pg-side {
+            flex: 0 0 256px; background: #fff; border: 1.5px solid var(--color-gray-200); border-radius: 14px;
+            padding: 1rem 1.05rem; display: flex; flex-direction: column; gap: 0.85rem; align-self: stretch;
+        }
+        .pg-side h4 { font-family: var(--font-heading); font-size: 0.95rem; color: #1c1d2b; margin: 0; }
+        .pg-sel-name { font-size: 0.8rem; color: var(--color-gray-500); word-break: break-all; min-height: 1em; }
+        .pg-ctl { display: flex; flex-direction: column; gap: 0.35rem; }
+        .pg-ctl > span { font-family: var(--font-heading); font-weight: 700; font-size: 0.78rem; color: var(--color-gray-700); display: flex; justify-content: space-between; }
+        .pg-ctl input[type=range] { width: 100%; accent-color: var(--color-coral-primary); }
+        .pg-ctl input[type=color] { width: 100%; height: 32px; border: 1px solid var(--color-gray-300); border-radius: 8px; background: #fff; cursor: pointer; }
+        .pg-row { display: flex; gap: 0.5rem; }
+        .pg-row button {
+            flex: 1; border: 1.5px solid var(--color-gray-300); background: #fff; border-radius: 8px;
+            padding: 0.45rem 0; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem;
+            color: var(--color-gray-700); cursor: pointer; transition: all .15s;
+        }
+        .pg-row button:hover { border-color: var(--color-coral-primary); color: var(--color-coral-primary); }
+        .pg-del { width: 100%; border: 1.5px solid #ffd0d8; background: #fff5f7; color: #d6193f; border-radius: 9px;
+            padding: 0.55rem 0; font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+        .pg-del:hover { background: #ffe0e6; }
+        .pg-side.disabled { opacity: 0.45; pointer-events: none; }
+        .pg-empty-note { font-size: 0.82rem; color: var(--color-gray-500); line-height: 1.5; }
+
+        @media (max-width: 860px) {
+            .pg-editor { flex-direction: column; }
+            .pg-side { flex: 0 0 auto; width: 100%; flex-direction: row; flex-wrap: wrap; }
+            .pg-stage-outer { min-height: 46vh; }
+        }
     </style>
 </head>
 <body>
@@ -768,6 +865,55 @@
             <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" class="btn btn-outline"><img class="btn-icon" src="https://cdn.simpleicons.org/huggingface/FFD21E" alt="" aria-hidden="true"> Dataset</a>
         </div>
     </header>
+
+    <!-- EDIT PLAYGROUND -->
+    <section class="narrow pg-panel fp-center" id="playground">
+        <div class="pg">
+            <h2 class="text-center reveal" style="margin-bottom:0.5rem;">Try the Edit Playground</h2>
+            <p class="pg-sub reveal">Pick a parsed design, then move, rotate, recolor, restack, fade, or delete any recovered element — the six atomic edits, live.</p>
+            <div class="pg-previews reveal" id="pgPreviews"></div>
+            <div class="pg-editor reveal">
+                <div class="pg-stage-col">
+                    <div class="pg-toolbar">
+                        <div class="pg-modes">
+                            <button data-mode="move" class="active" type="button">✥ Move</button>
+                            <button data-mode="rotate" type="button">⟳ Rotate</button>
+                        </div>
+                        <span class="pg-hint" id="pgHint">Click an element to select, then drag to move it.</span>
+                        <button class="pg-reset" id="pgReset" type="button">Reset</button>
+                    </div>
+                    <div class="pg-stage-outer" id="pgStageOuter">
+                        <div class="pg-stage" id="pgStage"></div>
+                    </div>
+                </div>
+                <aside class="pg-side disabled" id="pgSide">
+                    <h4>Selected element</h4>
+                    <div class="pg-sel-name" id="pgSelName">None — click an element on the canvas.</div>
+                    <div class="pg-ctl">
+                        <span>Opacity <b id="pgOpacityVal">100%</b></span>
+                        <input type="range" id="pgOpacity" min="0" max="100" value="100">
+                    </div>
+                    <div class="pg-ctl">
+                        <span>Rotation <b id="pgRotVal">0°</b></span>
+                        <input type="range" id="pgRotation" min="-180" max="180" value="0">
+                    </div>
+                    <div class="pg-ctl">
+                        <span>Recolor</span>
+                        <input type="color" id="pgColor" value="#ff4a6d">
+                        <button class="pg-row" id="pgColorReset" type="button" style="border:1.5px solid var(--color-gray-300);background:#fff;border-radius:8px;padding:0.35rem 0;font-family:var(--font-heading);font-weight:700;font-size:0.76rem;color:var(--color-gray-700);cursor:pointer;">Clear recolor</button>
+                    </div>
+                    <div class="pg-ctl">
+                        <span>Z-Order</span>
+                        <div class="pg-row">
+                            <button id="pgBack" type="button">⬇ Back</button>
+                            <button id="pgFront" type="button">⬆ Front</button>
+                        </div>
+                    </div>
+                    <button class="pg-del" id="pgDelete" type="button">🗑 Delete element</button>
+                </aside>
+            </div>
+        </div>
+    </section>
 
     <!-- INTRO STATEMENTS (full-page slides) -->
     <section class="narrow text-center fp-statement">
@@ -1192,6 +1338,244 @@
         } else {
             requestAnimationFrame(boot);
         }
+    </script>
+
+    <script>
+    /* ============================================================
+       Edit Playground — reconstruct parsed elements (z-order +
+       exact bbox placement) and apply the 6 atomic edits live.
+       ============================================================ */
+    (function () {
+        const BASE = 'assets/playground/';
+        const stage = document.getElementById('pgStage');
+        const stageOuter = document.getElementById('pgStageOuter');
+        const previews = document.getElementById('pgPreviews');
+        if (!stage || !previews) return;
+
+        const side = document.getElementById('pgSide');
+        const selName = document.getElementById('pgSelName');
+        const elOpacity = document.getElementById('pgOpacity');
+        const elOpacityVal = document.getElementById('pgOpacityVal');
+        const elRotation = document.getElementById('pgRotation');
+        const elRotVal = document.getElementById('pgRotVal');
+        const elColor = document.getElementById('pgColor');
+        const hint = document.getElementById('pgHint');
+
+        let mani = null;       // current manifest
+        let els = [];          // [{data, dom, img, tint, x,y,w,h,angle,opacity,color,z,deleted}]
+        let sel = -1;          // selected index
+        let mode = 'move';     // 'move' | 'rotate'
+        let zCounter = 0;      // front counter
+        let zBot = -1;         // back counter
+
+        const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+        function sizeStage() {
+            if (!mani) return;
+            const maxW = Math.max(100, stageOuter.clientWidth - 20);
+            const maxH = Math.max(160, window.innerHeight * 0.56);
+            const scale = Math.min(maxW / mani.w, maxH / mani.h);
+            stage.style.width = Math.round(mani.w * scale) + 'px';
+            stage.style.height = Math.round(mani.h * scale) + 'px';
+        }
+
+        function applyEl(o) {
+            const d = o.dom;
+            d.style.left = o.x + '%';
+            d.style.top = o.y + '%';
+            d.style.width = o.w + '%';
+            d.style.height = o.h + '%';
+            d.style.transform = 'rotate(' + o.angle + 'deg)';
+            d.style.zIndex = o.z;
+            d.style.opacity = o.opacity;
+            d.style.display = o.deleted ? 'none' : '';
+            // recolor tint
+            if (o.color) {
+                o.tint.style.backgroundColor = o.color;
+                o.tint.style.opacity = '1';
+            } else {
+                o.tint.style.opacity = '0';
+            }
+        }
+
+        function render(m) {
+            mani = m;
+            stage.innerHTML = '';
+            els = [];
+            sel = -1;
+            zCounter = m.elements.length + 1;
+            zBot = -1;
+            sizeStage();
+            m.elements.forEach((data, i) => {
+                const o = {
+                    data: data, i: i,
+                    x: data.bbox[0] / m.w * 100,
+                    y: data.bbox[1] / m.h * 100,
+                    w: data.bbox[2] / m.w * 100,
+                    h: data.bbox[3] / m.h * 100,
+                    angle: data.angle || 0,
+                    opacity: 1, color: null, z: data.z, deleted: false
+                };
+                const d = document.createElement('div');
+                d.className = 'pg-el ' + (data.type === 'text' ? 'text' : 'object');
+                const imgUrl = BASE + m.key + '/' + data.img;
+                const img = document.createElement('img');
+                img.src = imgUrl; img.alt = '';
+                const tint = document.createElement('div');
+                tint.className = 'pg-tint';
+                tint.style.webkitMaskImage = "url('" + imgUrl + "')";
+                tint.style.maskImage = "url('" + imgUrl + "')";
+                const rot = document.createElement('div');
+                rot.className = 'pg-rot';
+                d.appendChild(img); d.appendChild(tint); d.appendChild(rot);
+                o.dom = d; o.tint = tint; o.rot = rot;
+                stage.appendChild(d);
+                applyEl(o);
+                wireElement(o);
+                els.push(o);
+            });
+            selectEl(-1);
+        }
+
+        function selectEl(i) {
+            sel = i;
+            els.forEach((o, k) => o.dom.classList.toggle('selected', k === i));
+            if (i < 0 || els[i].deleted) {
+                sel = -1;
+                side.classList.add('disabled');
+                selName.textContent = 'None — click an element on the canvas.';
+                return;
+            }
+            const o = els[i];
+            side.classList.remove('disabled');
+            selName.textContent = o.data.type.toUpperCase() + ' · ' +
+                (o.data.content || o.data.label || o.data.id);
+            elOpacity.value = Math.round(o.opacity * 100);
+            elOpacityVal.textContent = elOpacity.value + '%';
+            elRotation.value = Math.round(o.angle);
+            elRotVal.textContent = Math.round(o.angle) + '°';
+            if (o.color) elColor.value = o.color;
+        }
+
+        // ---- per-element drag (move) + rotate handle ----
+        function wireElement(o) {
+            let drag = null;
+            o.dom.addEventListener('pointerdown', (e) => {
+                if (e.target === o.rot) return; // handled by rotate handle
+                selectEl(o.i);
+                if (mode !== 'move') return;
+                e.stopPropagation();
+                o.dom.setPointerCapture(e.pointerId);
+                drag = { sx: e.clientX, sy: e.clientY, ox: o.x, oy: o.y };
+            });
+            o.dom.addEventListener('pointermove', (e) => {
+                if (!drag) return;
+                o.x = drag.ox + (e.clientX - drag.sx) / stage.clientWidth * 100;
+                o.y = drag.oy + (e.clientY - drag.sy) / stage.clientHeight * 100;
+                applyEl(o);
+            });
+            const end = () => { drag = null; };
+            o.dom.addEventListener('pointerup', end);
+            o.dom.addEventListener('pointercancel', end);
+
+            // rotate handle
+            let rdrag = null;
+            const ang = (x, y, cx, cy) => Math.atan2(y - cy, x - cx) * 180 / Math.PI;
+            o.rot.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                selectEl(o.i);
+                o.rot.setPointerCapture(e.pointerId);
+                const r = o.dom.getBoundingClientRect();
+                rdrag = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, base: o.angle - ang(e.clientX, e.clientY, r.left + r.width / 2, r.top + r.height / 2) };
+            });
+            o.rot.addEventListener('pointermove', (e) => {
+                if (!rdrag) return;
+                o.angle = Math.round(rdrag.base + ang(e.clientX, e.clientY, rdrag.cx, rdrag.cy));
+                applyEl(o);
+                elRotation.value = clamp(o.angle, -180, 180);
+                elRotVal.textContent = o.angle + '°';
+            });
+            const rend = () => { rdrag = null; };
+            o.rot.addEventListener('pointerup', rend);
+            o.rot.addEventListener('pointercancel', rend);
+        }
+
+        // ---- toolbar / side controls ----
+        document.querySelectorAll('.pg-modes button').forEach(b => {
+            b.addEventListener('click', () => {
+                mode = b.dataset.mode;
+                document.querySelectorAll('.pg-modes button').forEach(x => x.classList.toggle('active', x === b));
+                stage.querySelectorAll('.pg-el').forEach(e => e.classList.toggle('rot-mode', mode === 'rotate'));
+                hint.textContent = mode === 'move'
+                    ? 'Click an element to select, then drag to move it.'
+                    : 'Drag the handle above a selected element, or use the Rotation slider.';
+            });
+        });
+
+        elOpacity.addEventListener('input', () => {
+            if (sel < 0) return;
+            els[sel].opacity = elOpacity.value / 100;
+            elOpacityVal.textContent = elOpacity.value + '%';
+            applyEl(els[sel]);
+        });
+        elRotation.addEventListener('input', () => {
+            if (sel < 0) return;
+            els[sel].angle = +elRotation.value;
+            elRotVal.textContent = elRotation.value + '°';
+            applyEl(els[sel]);
+        });
+        elColor.addEventListener('input', () => {
+            if (sel < 0) return;
+            els[sel].color = elColor.value;
+            applyEl(els[sel]);
+        });
+        document.getElementById('pgColorReset').addEventListener('click', () => {
+            if (sel < 0) return;
+            els[sel].color = null;
+            applyEl(els[sel]);
+        });
+        document.getElementById('pgFront').addEventListener('click', () => {
+            if (sel < 0) return; els[sel].z = ++zCounter; applyEl(els[sel]);
+        });
+        document.getElementById('pgBack').addEventListener('click', () => {
+            if (sel < 0) return; els[sel].z = --zBot; applyEl(els[sel]);
+        });
+        document.getElementById('pgDelete').addEventListener('click', () => {
+            if (sel < 0) return; els[sel].deleted = true; applyEl(els[sel]); selectEl(-1);
+        });
+        document.getElementById('pgReset').addEventListener('click', () => { if (mani) render(mani); });
+
+        // click empty stage = deselect
+        stage.addEventListener('pointerdown', (e) => { if (e.target === stage) selectEl(-1); });
+        // keep edit gestures from triggering full-page navigation
+        stage.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+        stage.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: false });
+        window.addEventListener('resize', sizeStage);
+
+        // ---- load episode list + manifests ----
+        async function loadManifest(key) {
+            const m = await (await fetch(BASE + key + '.json')).json();
+            m.key = key;
+            render(m);
+        }
+        fetch(BASE + 'index.json').then(r => r.json()).then(list => {
+            list.forEach((ep, idx) => {
+                const b = document.createElement('button');
+                b.className = 'pg-thumb' + (idx === 0 ? ' active' : '');
+                b.type = 'button';
+                const im = document.createElement('img');
+                im.src = BASE + ep.thumb; im.alt = 'design ' + (idx + 1); im.loading = 'lazy';
+                b.appendChild(im);
+                b.addEventListener('click', () => {
+                    previews.querySelectorAll('.pg-thumb').forEach(t => t.classList.remove('active'));
+                    b.classList.add('active');
+                    loadManifest(ep.key);
+                });
+                previews.appendChild(b);
+            });
+            if (list.length) loadManifest(list[0].key);
+        }).catch(err => { hint.textContent = 'Could not load playground data.'; console.error(err); });
+    })();
     </script>
 </body>
 </html>
