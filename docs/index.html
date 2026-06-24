@@ -899,6 +899,10 @@
                         <input type="range" id="pgRotation" min="-180" max="180" value="0">
                     </div>
                     <div class="pg-ctl">
+                        <span>Scale <b id="pgScaleVal">100%</b></span>
+                        <input type="range" id="pgScale" min="20" max="300" value="100">
+                    </div>
+                    <div class="pg-ctl">
                         <span>Recolor</span>
                         <input type="color" id="pgColor" value="#ff4a6d">
                         <button class="pg-row" id="pgColorReset" type="button" style="border:1.5px solid var(--color-gray-300);background:#fff;border-radius:8px;padding:0.35rem 0;font-family:var(--font-heading);font-weight:700;font-size:0.76rem;color:var(--color-gray-700);cursor:pointer;">Clear recolor</button>
@@ -1359,6 +1363,8 @@
         const elOpacityVal = document.getElementById('pgOpacityVal');
         const elRotation = document.getElementById('pgRotation');
         const elRotVal = document.getElementById('pgRotVal');
+        const elScale = document.getElementById('pgScale');
+        const elScaleVal = document.getElementById('pgScaleVal');
         const elColor = document.getElementById('pgColor');
         const hint = document.getElementById('pgHint');
 
@@ -1385,7 +1391,7 @@
             d.style.top = o.y + '%';
             d.style.width = o.w + '%';
             d.style.height = o.h + '%';
-            d.style.transform = 'rotate(' + o.angle + 'deg)';
+            d.style.transform = 'rotate(' + o.angle + 'deg) scale(' + (o.scale || 1) + ')';
             d.style.zIndex = o.z;
             d.style.opacity = o.opacity;
             d.style.display = o.deleted ? 'none' : '';
@@ -1414,7 +1420,7 @@
                     w: data.bbox[2] / m.w * 100,
                     h: data.bbox[3] / m.h * 100,
                     angle: data.angle || 0,
-                    opacity: 1, color: null, z: data.z, deleted: false
+                    opacity: 1, color: null, z: data.z, deleted: false, scale: 1
                 };
                 if (data.mk) decodeMask(o);
                 const d = document.createElement('div');
@@ -1460,6 +1466,8 @@
             elOpacityVal.textContent = elOpacity.value + '%';
             elRotation.value = Math.round(o.angle);
             elRotVal.textContent = Math.round(o.angle) + '°';
+            elScale.value = Math.round((o.scale || 1) * 100);
+            elScaleVal.textContent = elScale.value + '%';
             if (o.color) elColor.value = o.color;
             drawOutline(o);
         }
@@ -1560,9 +1568,10 @@
                 const elW = o.w / 100 * sw, elH = o.h / 100 * sh;
                 const cx = o.x / 100 * sw + elW / 2, cy = o.y / 100 * sh + elH / 2;
                 const a = -o.angle * Math.PI / 180;
+                const s = o.scale || 1;
                 const dx = px - cx, dy = py - cy;
-                const lx = dx * Math.cos(a) - dy * Math.sin(a) + elW / 2;
-                const ly = dx * Math.sin(a) + dy * Math.cos(a) + elH / 2;
+                const lx = (dx * Math.cos(a) - dy * Math.sin(a)) / s + elW / 2;
+                const ly = (dx * Math.sin(a) + dy * Math.cos(a)) / s + elH / 2;
                 if (lx < 0 || ly < 0 || lx > elW || ly > elH) continue;
                 if (!o.mask) return i; // mask not ready yet → fall back to bbox
                 const ax = clamp(Math.floor(lx / elW * o.aw), 0, o.aw - 1);
@@ -1630,6 +1639,12 @@
             if (sel < 0) return;
             els[sel].angle = +elRotation.value;
             elRotVal.textContent = elRotation.value + '°';
+            applyEl(els[sel]);
+        });
+        elScale.addEventListener('input', () => {
+            if (sel < 0) return;
+            els[sel].scale = +elScale.value / 100;
+            elScaleVal.textContent = elScale.value + '%';
             applyEl(els[sel]);
         });
         elColor.addEventListener('input', () => {
