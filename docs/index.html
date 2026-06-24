@@ -943,7 +943,7 @@
     <!-- WHAT REDESIGN DOES + INTRO FIGURE -->
     <section class="narrow text-center fp-center">
         <h2 class="reveal">What ReDesign Does</h2>
-        <p class="reveal whatwedo-lead">ReDesign recovers a fully editable design hierarchy from a single image.<br>A vision-language controller grows a layer tree breadth-first and a verifier checks every step,<br>producing semantic text layers with real fonts, vector shapes with fills, grouped elements with z-order, and isolated elements that survive real edits without disturbing the rest of the design.</p>
+        <p class="reveal whatwedo-lead">ReDesign recovers a fully editable design hierarchy from a single image.<br>A vision-language agent extracts semantic text layers, vector shapes, grouped elements, and isolated elements, making every element editable.</p>
         <figure class="reveal intro-fig" style="margin-top: 3.2rem;">
             <img src="assets/figures/intro_teaser.webp" alt="ReDesign: from flat image to editable design" style="max-width: 100%;">
         </figure>
@@ -984,7 +984,7 @@
     <section class="narrow fp-center">
         <h2 class="text-center reveal">Reconstruction Accuracy</h2>
         <p style="text-align: center; font-size: 1.15rem;" class="reveal">
-            Figma-909 benchmark; 909 real-world designs. ReDesign wins on every metric.
+            On the Figma-909 benchmark of 909 real-world designs, ReDesign wins on every metric.
         </p>
 
         <div style="overflow-x: auto; margin-top: 3rem;" class="reveal">
@@ -1050,7 +1050,7 @@
         <h2 class="text-center reveal">Per-Element Reconstruction</h2>
         <figure class="reveal" style="margin: 2.8rem auto;">
             <img src="assets/figures/exp_accuracy_quali.webp" alt="Per-element reconstruction across methods" style="max-width: 100%;">
-            <figcaption>Each row shows design input and outputs across methods. Highlighted elements (green box):<br>ReDesign recovers them cleanly and completely; baselines miss, break, or distort them.</figcaption>
+            <figcaption>The ReDesign agent reconstructs each design element (highlighted in green) more accurately than the baselines.</figcaption>
         </figure>
     </section>
 
@@ -1059,7 +1059,7 @@
         <div class="narrow">
             <h2 class="text-center reveal">Editability: Structure That Survives Edits</h2>
             <p style="text-align: center; font-size: 1.15rem;" class="reveal">
-                Six atomic edits on predicted designs; measured against ground truth. ReDesign dominates on all axes.
+                Six atomic edits on reconstructed designs, measured against ground truth. ReDesign dominates on all axes.
             </p>
 
             <h3 class="text-center reveal" style="margin-top: 2rem;">Edit Types Tested</h3>
@@ -1086,7 +1086,7 @@
 
             <figure class="reveal dense-fig" style="margin: 2rem auto;">
                 <img src="assets/figures/exp_editability_quanti.webp" alt="Editability metrics across atomic edits" style="max-width: 100%;">
-                <figcaption>(a) SSIM after edit replay; ReDesign (orange/teal line) is highest on all axes. (b) Text recall after text edits;<br>ReDesign dominates. Results show structure survives diverse real edits.</figcaption>
+                <figcaption>(a) SSIM after edit replay. ReDesign is highest on all axes. (b) Text recall after text edits.<br>ReDesign dominates. Results show structure survives diverse real edits.</figcaption>
             </figure>
         </div>
     </section>
@@ -1099,7 +1099,7 @@
         </p>
         <figure class="reveal tall-fig" style="margin: 2.4rem auto;">
             <img src="assets/figures/exp_edit_quali.webp" alt="Qualitative edit examples" style="max-width: 100%;">
-            <figcaption>Each row: ground-truth edit (left) vs. output under each method.<br>ReDesign's edits are precise and preserve layout integrity; baselines fail or distort.</figcaption>
+            <figcaption>Each row: ground-truth edit (left) vs. output under each method.<br>ReDesign's edits are precise and preserve layout integrity, while baselines fail or distort.</figcaption>
         </figure>
     </section>
 
@@ -1108,7 +1108,7 @@
         <div class="narrow">
             <h2 class="text-center reveal">Why Structure Beats Pixel Regeneration</h2>
             <p style="text-align: center; font-size: 1.15rem;" class="reveal">
-                Generative editors (Nano Banana 2) edit pixel-space: instructions leak, layouts blur, precision fails. ReDesign exposes discrete layers with explicit position and rotation; edits execute exactly.
+                Generative editors (Nano Banana 2) edit pixel-space: instructions leak, layouts blur, precision fails.<br>ReDesign exposes discrete layers with explicit position and rotation, so edits execute exactly.
             </p>
             <figure class="reveal airy-fig">
                 <img src="assets/figures/analysis_nanobanana_failure.webp" alt="ReDesign vs generative editor precision" style="max-width: 100%;">
@@ -1120,6 +1120,9 @@
     <!-- FIGMA-909 BENCHMARK -->
     <section class="narrow text-center fp-center">
         <h2 class="reveal">Figma-909: The Benchmark</h2>
+        <p style="text-align: center; font-size: 1.15rem;" class="reveal">
+            To evaluate editability at scale, we introduce the Figma Edit Replay Benchmark.
+        </p>
         <div class="benchmark-grid" style="margin-top: 3.5rem;">
             <div class="stat-card reveal">
                 <div class="stat-label">Real-World Frames</div>
