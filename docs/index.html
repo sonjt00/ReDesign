@@ -876,7 +876,7 @@
     <section class="narrow pg-panel" id="playground">
         <div class="pg">
             <h2 class="text-center reveal" style="margin-bottom:0.5rem;">Try the Edit Playground</h2>
-            <p class="pg-sub reveal">Pick a design to see how the ReDesign agent parsed it.</p>
+            <p class="pg-sub reveal">Pick a design to see how the ReDesign agent recovered editable design structures.</p>
             <div class="pg-previews reveal" id="pgPreviews"></div>
             <div class="pg-editor reveal">
                 <div class="pg-stage-col">
@@ -1461,7 +1461,7 @@
             }
             const o = els[i];
             side.classList.remove('disabled');
-            selName.textContent = o.data.type.toUpperCase() + ' · ' + o.data.id;
+            selName.textContent = o.data.type.toUpperCase() + ': ' + o.data.id;
             elOpacity.value = Math.round(o.opacity * 100);
             elOpacityVal.textContent = elOpacity.value + '%';
             elRotation.value = Math.round(o.angle);
