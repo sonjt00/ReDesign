@@ -89,20 +89,20 @@
            per-panel background colors (the color now lives in the backdrop). */
         h2 {
             font-family: var(--font-heading);
-            font-size: 1.9rem;
+            font-size: 2rem;
             font-weight: 800;
             line-height: 1.2;
-            margin: 0 0 1.2rem 0;
+            margin: 0 0 1.75rem 0;
             letter-spacing: -0.01em;
             color: #1c1d2b;
         }
 
         h3 {
             font-family: var(--font-heading);
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 700;
             line-height: 1.25;
-            margin: 0 0 0.9rem 0;
+            margin: 0 0 1.25rem 0;
             color: #1c1d2b;
         }
 
@@ -120,7 +120,8 @@
         p {
             font-family: var(--font-body);
             font-weight: 400;
-            margin-bottom: 0.8rem;
+            line-height: 1.78;
+            margin-bottom: 1.15rem;
             color: var(--color-gray-800);
         }
 
@@ -139,6 +140,45 @@
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             text-decoration: none;
+        }
+
+        .btn-icon {
+            width: 1.15em;
+            height: 1.15em;
+            vertical-align: -0.2em;
+            margin-right: 0.55em;
+        }
+
+        /* Hero — large and spread out so it fills the screen */
+        .hero h1 {
+            font-size: clamp(3.5rem, 11vw, 7.5rem);
+            line-height: 1.02;
+            margin: 0 0 2.2rem 0;
+        }
+        .hero-sub {
+            font-size: clamp(1.15rem, 2.5vw, 1.8rem);
+            font-weight: 600;
+            line-height: 1.5;
+            margin: 0 auto 3.5rem auto;
+        }
+        .hero-affil-wrap { margin: 0 auto 2.8rem auto; }
+        .hero-affil {
+            display: block;
+            width: clamp(240px, 26vw, 360px);
+            height: auto;
+            margin: 0 auto;
+        }
+        .hero-btns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.6rem;
+        }
+        .hero-btns .btn {
+            font-size: 1.15rem;
+            padding: 1rem 2.1rem;
+            display: inline-flex;
+            align-items: center;
         }
 
         .btn-gradient {
@@ -485,6 +525,7 @@
         /* dense panels (heading + paragraph + cards + figure) need a smaller
            figure so the whole panel fits one screen and nothing is clipped */
         html.fp-on #fp figure.dense-fig img { max-height: 38vh; }
+        html.fp-on #fp figure.method-fig img { max-height: 45vh; }
 
         /* Right-side pagination dots (FullPage.js style) */
         #fp-nav { display: none; }
@@ -523,13 +564,12 @@
         .toss-eyebrow {
             display: inline-block;
             font-family: var(--font-heading);
-            font-size: 0.85rem;
+            font-size: 1.15rem;
             font-weight: 800;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: #4a3a5e;
-            opacity: 0.85;
-            margin-bottom: 1.1rem;
+            color: #43314f;
+            margin-bottom: 1.9rem;
         }
 
         /* solid dark so it reads on the bold panel backgrounds */
@@ -539,18 +579,18 @@
             font-weight: 800;
             line-height: 1.15;
             letter-spacing: -0.02em;
-            margin: 0 0 1.1rem 0;
+            margin: 0 0 1.9rem 0;
             color: #1c1d2b;
         }
 
         .toss-sub {
             font-family: var(--font-body);
-            font-size: clamp(0.95rem, 1.6vw, 1.12rem);
+            font-size: clamp(1.2rem, 2vw, 1.55rem);
             font-weight: 500;
-            line-height: 1.6;
-            color: #43445a;
+            line-height: 1.95;
+            color: #3a3b4f;
             margin: 0 auto;
-            max-width: 600px;
+            max-width: 760px;
         }
 
         /* Negative tone */
@@ -596,7 +636,7 @@
             .comparison-grid { grid-template-columns: repeat(2, 1fr); }
             /* Smaller intro headline on mobile */
             .toss-headline { font-size: clamp(1.8rem, 8vw, 2.6rem); }
-            .toss-sub { font-size: 1rem; }
+            .toss-sub { font-size: 1.15rem; }
         }
 
         @media (max-width: 576px) {
@@ -622,13 +662,16 @@
     <nav id="fp-nav" aria-label="Section navigation"></nav>
     <div id="fp">
     <!-- HERO SECTION -->
-    <header class="container text-center" style="padding: 4rem 0;">
+    <header class="hero text-center">
         <h1 class="text-gradient reveal">ReDesign</h1>
-        <h4 class="text-muted reveal">Recovering Editable Design Structures from Images via Agentic Decomposition</h4>
-        <div style="margin: 2rem 0;" class="reveal">
-            <a href="https://openreview.net/pdf?id=JiEr8B3WBr" class="btn btn-outline" style="margin: 0.5rem;">📄 Paper</a>
-            <a href="https://github.com/sonjt00/ReDesign" class="btn btn-outline" style="margin: 0.5rem;">💻 Code</a>
-            <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" class="btn btn-outline" style="margin: 0.5rem;">📊 Dataset</a>
+        <h4 class="text-muted reveal hero-sub">Recovering Editable Design Structures from Images via Agentic Decomposition</h4>
+        <div class="reveal hero-affil-wrap">
+            <img class="hero-affil" src="assets/logo_kaist.svg" alt="KAIST">
+        </div>
+        <div class="hero-btns reveal">
+            <a href="https://openreview.net/pdf?id=JiEr8B3WBr" class="btn btn-outline"><img class="btn-icon" src="https://cdn.simpleicons.org/arxiv/B31B1B" alt="" aria-hidden="true"> Paper</a>
+            <a href="https://github.com/sonjt00/ReDesign" class="btn btn-outline"><img class="btn-icon" src="https://cdn.simpleicons.org/github/181717" alt="" aria-hidden="true"> Code</a>
+            <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" class="btn btn-outline"><img class="btn-icon" src="https://cdn.simpleicons.org/huggingface/FFD21E" alt="" aria-hidden="true"> Dataset</a>
         </div>
     </header>
 
@@ -636,12 +679,12 @@
     <section class="narrow text-center fp-statement">
         <span class="toss-eyebrow reveal">The Problem</span>
         <h2 class="toss-headline reveal">A flat image is a dead end.</h2>
-        <p class="toss-sub reveal">When the design file is lost, only pixels remain. You can't move an element, recolor a shape, fix a typo, or reflow the layout.</p>
+        <p class="toss-sub reveal">When the design file is lost, only pixels remain.<br>You can't move an element, recolor a shape, fix a typo, or reflow the layout.</p>
     </section>
     <section class="narrow text-center fp-statement">
         <span class="toss-eyebrow reveal">The Idea</span>
         <h2 class="toss-headline reveal">ReDesign grows the design back.</h2>
-        <p class="toss-sub reveal">A vision-language controller rebuilds the layer hierarchy as a tree — coarse to fine — verifying every step until each element is atomic.</p>
+        <p class="toss-sub reveal">A vision-language controller rebuilds the layer hierarchy as a tree, coarse to fine,<br>verifying every step until each element is atomic.</p>
     </section>
     <section class="narrow text-center fp-statement">
         <span class="toss-eyebrow reveal">The Result</span>
@@ -650,7 +693,7 @@
     </section>
 
     <!-- WHAT WE DO + INTRO FIGURE (merged into one panel) -->
-    <section class="narrow reveal">
+    <section class="narrow">
         <div class="callout">
             <h3 style="margin-top: 0; text-align: center;" class="reveal">What ReDesign Does</h3>
             <p class="reveal">ReDesign recovers a fully editable design hierarchy from a single image.</p>
@@ -688,9 +731,8 @@
             </div>
         </div>
 
-        <figure class="reveal dense-fig" style="margin-top: 1.5rem;">
+        <figure class="reveal method-fig" style="margin-top: 1.25rem;">
             <img src="assets/figures/method_main.webp" alt="Agentic tree expansion with tool actions and verification" style="max-width: 100%;">
-            <figcaption>Controller orchestrates five actions; each produces child layers. Verifier ensures no duplication, no incomplete coverage. Output: editable JSON hierarchy.</figcaption>
         </figure>
     </section>
 
@@ -922,21 +964,15 @@
             // Pretty per-panel background sequence (afterglow: coral → pink →
             // lilac → periwinkle → sky → back). Each panel a distinct soft
             // gradient, so every crossfade also shifts the whole backdrop.
-            const BGS = [
-                'linear-gradient(160deg,#ffffff 0%,#ffe7ee 100%)',
-                'linear-gradient(155deg,#ffd6df 0%,#ff9fbb 100%)',
-                'linear-gradient(155deg,#ffccea 0%,#ff8fcb 100%)',
-                'linear-gradient(155deg,#eccffb 0%,#ce97f6 100%)',
-                'linear-gradient(155deg,#d8d3fc 0%,#a99dfb 100%)',
-                'linear-gradient(155deg,#cbdcff 0%,#92b2ff 100%)',
-                'linear-gradient(155deg,#c7e8ff 0%,#84c7ff 100%)',
-                'linear-gradient(155deg,#d6e2ff 0%,#a6afff 100%)',
-                'linear-gradient(155deg,#ffcfe2 0%,#ff8fb8 100%)',
-                'linear-gradient(155deg,#ffd4cd 0%,#ff998c 100%)',
-                'linear-gradient(155deg,#ffe2c8 0%,#ffb277 100%)',
-                'linear-gradient(155deg,#e1dbff 0%,#b3b8ff 100%)',
-            ];
-            panels.forEach((p, i) => { p.style.background = BGS[i % BGS.length]; });
+            // Hero (0) and everything from 'What ReDesign Does' (4) onward are
+            // clean white; only the three intro statement panels (1,2,3) carry
+            // a bold full-screen color.
+            const STATEMENT_BG = {
+                1: 'linear-gradient(155deg,#ffd0dd 0%,#ff8fae 100%)', // The Problem — rose
+                2: 'linear-gradient(155deg,#d8d3fc 0%,#a294fb 100%)', // The Idea — violet
+                3: 'linear-gradient(155deg,#c4dcff 0%,#7ab8ff 100%)', // The Result — blue
+            };
+            panels.forEach((p, i) => { p.style.background = STATEMENT_BG[i] || '#ffffff'; });
 
             let current = 0;
             let animating = false;
