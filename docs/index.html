@@ -776,18 +776,13 @@
         .pg-stage-outer {
             flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
             min-height: 0; border-radius: 12px; padding: 10px;
-            background:
-                linear-gradient(45deg, #f1f3f6 25%, transparent 25%) -8px 0 / 16px 16px,
-                linear-gradient(-45deg, #f1f3f6 25%, transparent 25%) -8px 0 / 16px 16px,
-                linear-gradient(45deg, transparent 75%, #f1f3f6 75%) -8px 0 / 16px 16px,
-                linear-gradient(-45deg, transparent 75%, #f1f3f6 75%) -8px 0 / 16px 16px,
-                #ffffff;
+            background: #ffffff;
         }
         .pg-stage {
             position: relative; background: #fff; box-shadow: var(--shadow); overflow: hidden;
             user-select: none; touch-action: none; flex: 0 0 auto;
         }
-        .pg-el { position: absolute; cursor: pointer; }
+        .pg-el { position: absolute; pointer-events: none; }
         .pg-el > img { width: 100%; height: 100%; display: block; pointer-events: none; -webkit-user-drag: none; }
         .pg-el.selected { outline: 2px solid var(--color-coral-primary); outline-offset: 0; box-shadow: 0 0 0 4px rgba(255,74,109,.18); }
         .pg-tint {
@@ -802,7 +797,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,.3); cursor: grab; display: none;
         }
         .pg-el .pg-rot::before { content: ''; position: absolute; left: 50%; top: 12px; width: 2px; height: 14px; margin-left: -1px; background: var(--color-coral-primary); }
-        .pg-el.selected.rot-mode .pg-rot { display: block; }
+        .pg-el.selected .pg-rot { display: block; pointer-events: auto; }
 
         .pg-side {
             flex: 0 0 256px; background: #fff; border: 1.5px solid var(--color-gray-200); border-radius: 14px;
@@ -870,16 +865,12 @@
     <section class="narrow pg-panel fp-center" id="playground">
         <div class="pg">
             <h2 class="text-center reveal" style="margin-bottom:0.5rem;">Try the Edit Playground</h2>
-            <p class="pg-sub reveal">Pick a parsed design, then move, rotate, recolor, restack, fade, or delete any recovered element — the six atomic edits, live.</p>
+            <p class="pg-sub reveal">Pick a parsed design, then move, rotate, recolor, restack, fade, or delete any recovered element.</p>
             <div class="pg-previews reveal" id="pgPreviews"></div>
             <div class="pg-editor reveal">
                 <div class="pg-stage-col">
                     <div class="pg-toolbar">
-                        <div class="pg-modes">
-                            <button data-mode="move" class="active" type="button">✥ Move</button>
-                            <button data-mode="rotate" type="button">⟳ Rotate</button>
-                        </div>
-                        <span class="pg-hint" id="pgHint">Click an element to select, then drag to move it.</span>
+                        <span class="pg-hint" id="pgHint">Click an element to select &middot; drag to move &middot; use the handle to rotate.</span>
                         <button class="pg-reset" id="pgReset" type="button">Reset</button>
                     </div>
                     <div class="pg-stage-outer" id="pgStageOuter">
@@ -1200,13 +1191,13 @@
             // Pretty per-panel background sequence (afterglow: coral → pink →
             // lilac → periwinkle → sky → back). Each panel a distinct soft
             // gradient, so every crossfade also shifts the whole backdrop.
-            // Hero (0) and everything from 'What ReDesign Does' (4) onward are
-            // clean white; only the three intro statement panels (1,2,3) carry
-            // a bold full-screen color.
+            // Hero (0) + Playground (1) + everything from 'What ReDesign Does'
+            // onward are clean white; only the three intro statement panels
+            // (indices 2,3,4) carry a bold full-screen color.
             const STATEMENT_BG = {
-                1: 'linear-gradient(155deg,#ffd0dd 0%,#ff8fae 100%)', // The Problem — rose
-                2: 'linear-gradient(155deg,#d8d3fc 0%,#a294fb 100%)', // The Idea — violet
-                3: 'linear-gradient(155deg,#c4dcff 0%,#7ab8ff 100%)', // The Result — blue
+                2: 'linear-gradient(155deg,#ffd0dd 0%,#ff8fae 100%)', // The Problem — rose
+                3: 'linear-gradient(155deg,#d8d3fc 0%,#a294fb 100%)', // The Idea — violet
+                4: 'linear-gradient(155deg,#c4dcff 0%,#7ab8ff 100%)', // The Result — blue
             };
             panels.forEach((p, i) => { p.style.background = STATEMENT_BG[i] || '#ffffff'; });
 
@@ -1364,7 +1355,6 @@
         let mani = null;       // current manifest
         let els = [];          // [{data, dom, img, tint, x,y,w,h,angle,opacity,color,z,deleted}]
         let sel = -1;          // selected index
-        let mode = 'move';     // 'move' | 'rotate'
         let zCounter = 0;      // front counter
         let zBot = -1;         // back counter
 
@@ -1420,7 +1410,9 @@
                 d.className = 'pg-el ' + (data.type === 'text' ? 'text' : 'object');
                 const imgUrl = BASE + m.key + '/' + data.img;
                 const img = document.createElement('img');
-                img.src = imgUrl; img.alt = '';
+                img.alt = '';
+                img.addEventListener('load', () => buildAlpha(o, img));
+                img.src = imgUrl;
                 const tint = document.createElement('div');
                 tint.className = 'pg-tint';
                 tint.style.webkitMaskImage = "url('" + imgUrl + "')";
@@ -1449,7 +1441,7 @@
             const o = els[i];
             side.classList.remove('disabled');
             selName.textContent = o.data.type.toUpperCase() + ' · ' +
-                (o.data.content || o.data.label || o.data.id);
+                (o.data.content || o.data.id);
             elOpacity.value = Math.round(o.opacity * 100);
             elOpacityVal.textContent = elOpacity.value + '%';
             elRotation.value = Math.round(o.angle);
@@ -1457,28 +1449,48 @@
             if (o.color) elColor.value = o.color;
         }
 
-        // ---- per-element drag (move) + rotate handle ----
-        function wireElement(o) {
-            let drag = null;
-            o.dom.addEventListener('pointerdown', (e) => {
-                if (e.target === o.rot) return; // handled by rotate handle
-                selectEl(o.i);
-                if (mode !== 'move') return;
-                e.stopPropagation();
-                o.dom.setPointerCapture(e.pointerId);
-                drag = { sx: e.clientX, sy: e.clientY, ox: o.x, oy: o.y };
-            });
-            o.dom.addEventListener('pointermove', (e) => {
-                if (!drag) return;
-                o.x = drag.ox + (e.clientX - drag.sx) / stage.clientWidth * 100;
-                o.y = drag.oy + (e.clientY - drag.sy) / stage.clientHeight * 100;
-                applyEl(o);
-            });
-            const end = () => { drag = null; };
-            o.dom.addEventListener('pointerup', end);
-            o.dom.addEventListener('pointercancel', end);
+        // Build an alpha map (downscaled) for pixel-accurate hit-testing.
+        function buildAlpha(o, img) {
+            const iw = img.naturalWidth, ih = img.naturalHeight;
+            if (!iw || !ih) return;
+            const MAX = 240;
+            const s = Math.min(1, MAX / Math.max(iw, ih));
+            const cw = Math.max(1, Math.round(iw * s)), ch = Math.max(1, Math.round(ih * s));
+            const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+            const ctx = c.getContext('2d', { willReadFrequently: true });
+            try {
+                ctx.drawImage(img, 0, 0, cw, ch);
+                o.alpha = ctx.getImageData(0, 0, cw, ch).data;
+                o.aw = cw; o.ah = ch;
+            } catch (e) { o.alpha = null; }
+        }
 
-            // rotate handle
+        // Topmost (by z) element whose actual non-transparent pixel is under (px,py)
+        // expressed in stage pixels. Honors per-element position + rotation.
+        function hitTest(px, py) {
+            const sw = stage.clientWidth, sh = stage.clientHeight;
+            const order = els.map((_, i) => i)
+                .filter(i => !els[i].deleted && els[i].opacity > 0.02)
+                .sort((a, b) => els[b].z - els[a].z);
+            for (const i of order) {
+                const o = els[i];
+                const elW = o.w / 100 * sw, elH = o.h / 100 * sh;
+                const cx = o.x / 100 * sw + elW / 2, cy = o.y / 100 * sh + elH / 2;
+                const a = -o.angle * Math.PI / 180;
+                const dx = px - cx, dy = py - cy;
+                const lx = dx * Math.cos(a) - dy * Math.sin(a) + elW / 2;
+                const ly = dx * Math.sin(a) + dy * Math.cos(a) + elH / 2;
+                if (lx < 0 || ly < 0 || lx > elW || ly > elH) continue;
+                if (!o.alpha) return i; // alpha not ready yet → fall back to bbox
+                const ax = clamp(Math.floor(lx / elW * o.aw), 0, o.aw - 1);
+                const ay = clamp(Math.floor(ly / elH * o.ah), 0, o.ah - 1);
+                if (o.alpha[(ay * o.aw + ax) * 4 + 3] > 12) return i;
+            }
+            return -1;
+        }
+
+        // rotate handle (always available while an element is selected)
+        function wireElement(o) {
             let rdrag = null;
             const ang = (x, y, cx, cy) => Math.atan2(y - cy, x - cx) * 180 / Math.PI;
             o.rot.addEventListener('pointerdown', (e) => {
@@ -1500,18 +1512,31 @@
             o.rot.addEventListener('pointercancel', rend);
         }
 
-        // ---- toolbar / side controls ----
-        document.querySelectorAll('.pg-modes button').forEach(b => {
-            b.addEventListener('click', () => {
-                mode = b.dataset.mode;
-                document.querySelectorAll('.pg-modes button').forEach(x => x.classList.toggle('active', x === b));
-                stage.querySelectorAll('.pg-el').forEach(e => e.classList.toggle('rot-mode', mode === 'rotate'));
-                hint.textContent = mode === 'move'
-                    ? 'Click an element to select, then drag to move it.'
-                    : 'Drag the handle above a selected element, or use the Rotation slider.';
-            });
+        // ---- stage: pixel-accurate select + drag-to-move ----
+        let sdrag = null;
+        stage.addEventListener('pointerdown', (e) => {
+            if (e.target.classList && e.target.classList.contains('pg-rot')) return;
+            const r = stage.getBoundingClientRect();
+            const i = hitTest(e.clientX - r.left, e.clientY - r.top);
+            selectEl(i);
+            if (i >= 0) {
+                e.preventDefault();
+                stage.setPointerCapture(e.pointerId);
+                sdrag = { i, sx: e.clientX, sy: e.clientY, ox: els[i].x, oy: els[i].y, moved: false };
+            }
         });
+        stage.addEventListener('pointermove', (e) => {
+            if (!sdrag) return;
+            const o = els[sdrag.i];
+            o.x = sdrag.ox + (e.clientX - sdrag.sx) / stage.clientWidth * 100;
+            o.y = sdrag.oy + (e.clientY - sdrag.sy) / stage.clientHeight * 100;
+            applyEl(o);
+        });
+        const sEnd = () => { sdrag = null; };
+        stage.addEventListener('pointerup', sEnd);
+        stage.addEventListener('pointercancel', sEnd);
 
+        // ---- side controls ----
         elOpacity.addEventListener('input', () => {
             if (sel < 0) return;
             els[sel].opacity = elOpacity.value / 100;
@@ -1545,8 +1570,6 @@
         });
         document.getElementById('pgReset').addEventListener('click', () => { if (mani) render(mani); });
 
-        // click empty stage = deselect
-        stage.addEventListener('pointerdown', (e) => { if (e.target === stage) selectEl(-1); });
         // keep edit gestures from triggering full-page navigation
         stage.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
         stage.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: false });
