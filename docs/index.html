@@ -1668,26 +1668,30 @@
         function boxesOverlap(a, b) {
             return a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
         }
-        // True only if the two elements' actual MASKS share a pixel (not just
-        // their bounding boxes) — samples a grid over the boxes' intersection.
+        // True only if the two elements' actual SILHOUETTES share a pixel at
+        // their CURRENT positions (the same precise mask the pink selection ring
+        // is drawn from) — not just their bounding boxes. Densely samples the
+        // boxes' intersection so thin / partial overlaps are caught, and so
+        // full-canvas layers whose real content is elsewhere don't false-match.
         function masksOverlap(a, c) {
             const A = elBox(a), C = elBox(c);
             if (!boxesOverlap(A, C)) return false;
-            if (!a.mask || !c.mask) return true; // masks not ready → bbox fallback
+            if (!a.mask || !c.mask) return true; // masks not ready → permissive
             const ix0 = Math.max(A.l, C.l), iy0 = Math.max(A.t, C.t);
             const ix1 = Math.min(A.r, C.r), iy1 = Math.min(A.b, C.b);
-            const N = 28;
-            for (let i = 0; i <= N; i++) {
-                const px = ix0 + (ix1 - ix0) * i / N;
-                const au = Math.floor((px - A.l) / (A.r - A.l) * a.aw);
-                const cu = Math.floor((px - C.l) / (C.r - C.l) * c.aw);
-                if (au < 0 || au >= a.aw || cu < 0 || cu >= c.aw) continue;
-                for (let j = 0; j <= N; j++) {
-                    const py = iy0 + (iy1 - iy0) * j / N;
-                    const av = Math.floor((py - A.t) / (A.b - A.t) * a.ah);
-                    const cv = Math.floor((py - C.t) / (C.b - C.t) * c.ah);
-                    if (av < 0 || av >= a.ah || cv < 0 || cv >= c.ah) continue;
-                    if (a.mask[av * a.aw + au] && c.mask[cv * c.aw + cu]) return true;
+            const aw = A.r - A.l, ah = A.b - A.t, cw = C.r - C.l, ch = C.b - C.t;
+            // step = finest mask cell across both elements, so no cell is skipped
+            const step = Math.max(0.75, Math.min(aw / a.aw, cw / c.aw, ah / a.ah, ch / c.ah));
+            for (let py = iy0; py <= iy1; py += step) {
+                const av = Math.floor((py - A.t) / ah * a.ah);
+                const cv = Math.floor((py - C.t) / ch * c.ah);
+                if (av < 0 || av >= a.ah || cv < 0 || cv >= c.ah) continue;
+                const ab = av * a.aw, cb = cv * c.aw;
+                for (let px = ix0; px <= ix1; px += step) {
+                    const au = Math.floor((px - A.l) / aw * a.aw);
+                    const cu = Math.floor((px - C.l) / cw * c.aw);
+                    if (au < 0 || au >= a.aw || cu < 0 || cu >= c.aw) continue;
+                    if (a.mask[ab + au] && c.mask[cb + cu]) return true;
                 }
             }
             return false;
