@@ -164,6 +164,11 @@
         /* Author list (above the affiliation logo, Vector Prism style) */
         .hero-authors {
             display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .hero-authors .author-row {
+            display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 0.7rem 2.4rem;
@@ -731,12 +736,16 @@
             <h4 class="text-muted hero-sub">Recovering Editable Design Structures from Images via Agentic Decomposition</h4>
         </div>
         <div class="hero-authors reveal">
-            <span class="author"><span class="name">Jooyeol Yun</span><span class="email">blizzard072@kaist.ac.kr</span></span>
-            <span class="author"><span class="name">Jintae Park</span><span class="email">sonjt00@kaist.ac.kr</span></span>
-            <span class="author"><span class="name">Hyesu Lim</span><span class="email">hyesulim.ac@gmail.com</span></span>
-            <span class="author"><span class="name">Junha Hyung</span><span class="email">sharpeeee@kaist.ac.kr</span></span>
-            <span class="author"><span class="name">Hyungjin Chung</span><span class="email">{Placeholder}@korea.ac.kr</span></span>
-            <span class="author"><span class="name">Jaegul Choo</span><span class="email">jchoo@kaist.ac.kr</span></span>
+            <div class="author-row">
+                <span class="author"><span class="name">Jooyeol Yun</span><span class="email">blizzard072@kaist.ac.kr</span></span>
+                <span class="author"><span class="name">Jintae Park</span><span class="email">sonjt00@kaist.ac.kr</span></span>
+                <span class="author"><span class="name">Hyesu Lim</span><span class="email">hyesulim.ac@gmail.com</span></span>
+                <span class="author"><span class="name">Junha Hyung</span><span class="email">sharpeeee@kaist.ac.kr</span></span>
+            </div>
+            <div class="author-row">
+                <span class="author"><span class="name">Hyungjin Chung</span><span class="email">{Placeholder}@korea.ac.kr</span></span>
+                <span class="author"><span class="name">Jaegul Choo</span><span class="email">jchoo@kaist.ac.kr</span></span>
+            </div>
         </div>
         <div class="reveal hero-affil-wrap">
             <img class="hero-affil" src="assets/logo_kaist.svg" alt="KAIST AI">
