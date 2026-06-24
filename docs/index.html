@@ -456,18 +456,20 @@
                (and lets it inner-scroll) when a panel overflows. */
             justify-content: safe center;
             scrollbar-width: none;
-            /* fade out: stay clickable-hidden until the opacity finishes */
+            /* fade out: stay clickable-hidden until the opacity finishes.
+               !important so the global reduced-motion rule (which zeroes all
+               transition-durations) can't flatten this gentle opacity fade. */
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+            transition: opacity 0.8s ease, visibility 0s linear 0.8s !important;
         }
         html.fp-on #fp > .fp-current {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
             z-index: 2;
-            transition: opacity 0.8s ease, visibility 0s;
+            transition: opacity 0.8s ease, visibility 0s !important;
         }
         html.fp-on #fp > header::-webkit-scrollbar,
         html.fp-on #fp > section::-webkit-scrollbar,
@@ -648,18 +650,14 @@
         <p class="toss-sub reveal">Text layers with real fonts, vector shapes with fills, grouped elements with z-order — recovered from a single image, ready to re-edit.</p>
     </section>
 
-    <!-- WHAT WE DO -->
+    <!-- WHAT WE DO + INTRO FIGURE (merged into one panel) -->
     <section class="narrow reveal">
         <div class="callout">
             <h3 style="margin-top: 0; text-align: center;" class="reveal">What ReDesign Does</h3>
             <p class="reveal">ReDesign recovers a fully editable design hierarchy from a single image.</p>
             <p class="reveal">A vision-language controller grows a layer tree breadth-first; a verifier checks every step. The output: semantic text layers with real fonts, vector shapes with fills, groups with z-order, and isolated elements that survive real edits without disturbing the rest of the design.</p>
         </div>
-    </section>
-
-    <!-- TEASER FIGURE -->
-    <section class="narrow">
-        <figure class="reveal">
+        <figure class="reveal" style="margin-top: 1.5rem;">
             <img src="assets/figures/intro_teaser.webp" alt="ReDesign: from flat image to editable design" style="max-width: 100%;">
             <figcaption>From flat image to editable design: text layers with real fonts, vector shapes with colors, groups with z-order, and elements that respond to real design edits.</figcaption>
         </figure>
@@ -671,11 +669,6 @@
         <p style="text-align: center; font-size: 1.15rem;" class="reveal">
             Starting from the whole image as root, a VLM controller expands breadth-first. At each node: choose one tool-backed action; a verifier checks validity. Repeat until every leaf is atomic and editable.
         </p>
-
-        <figure class="reveal" style="margin-top: 3rem;">
-            <img src="assets/figures/method_main.webp" alt="Agentic tree expansion with tool actions and verification" style="max-width: 100%;">
-            <figcaption>Controller orchestrates five actions; each produces child layers. Verifier ensures no duplication, no incomplete coverage. Output: editable JSON hierarchy.</figcaption>
-        </figure>
 
         <h3 class="text-center reveal" style="margin-top: 2.5rem;">Five Tool-Backed Actions</h3>
         <div class="action-grid reveal">
@@ -695,6 +688,11 @@
                 <div class="action-title">Vectorization & Typography</div>
             </div>
         </div>
+
+        <figure class="reveal" style="margin-top: 2.5rem;">
+            <img src="assets/figures/method_main.webp" alt="Agentic tree expansion with tool actions and verification" style="max-width: 100%;">
+            <figcaption>Controller orchestrates five actions; each produces child layers. Verifier ensures no duplication, no incomplete coverage. Output: editable JSON hierarchy.</figcaption>
+        </figure>
     </section>
 
     <!-- RESULTS: PARSING ACCURACY (QUANTITATIVE) -->
@@ -858,20 +856,15 @@
         <p class="text-muted" style="font-size: 1.1rem; margin-top: 2rem;" class="reveal">
             All 909 frames redistributed under CC BY 4.0 with full attribution. <a href="https://huggingface.co/datasets/Jintae-Park/ReDesign-Figma909" target="_blank">Download on HuggingFace</a>.
         </p>
-    </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="narrow">
-            <div class="footer-text reveal">
-                <p>ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition</p>
-                <p style="font-size: 0.95rem; color: var(--color-gray-500);">
-                    Figma-909: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color: var(--color-gray-500);">CC BY 4.0</a> ·
-                    Code: <a href="https://github.com/sonjt00/ReDesign/blob/main/LICENSE" target="_blank" style="color: var(--color-gray-500);">MIT</a>
-                </p>
-            </div>
+        <div class="footer-text reveal" style="margin-top: 3rem; border-top: 1px solid var(--color-gray-200); padding-top: 2rem;">
+            <p>ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition</p>
+            <p style="font-size: 0.95rem; color: var(--color-gray-500);">
+                Figma-909: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color: var(--color-gray-500);">CC BY 4.0</a> ·
+                Code: <a href="https://github.com/sonjt00/ReDesign/blob/main/LICENSE" target="_blank" style="color: var(--color-gray-500);">MIT</a>
+            </p>
         </div>
-    </footer>
+    </section>
     </div><!-- /#fp -->
 
     <script>
