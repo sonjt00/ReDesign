@@ -1657,12 +1657,24 @@
             els[sel].color = null;
             applyEl(els[sel]);
         });
-        document.getElementById('pgFront').addEventListener('click', () => {
-            if (sel < 0) return; els[sel].z = ++zCounter; applyEl(els[sel]);
-        });
-        document.getElementById('pgBack').addEventListener('click', () => {
-            if (sel < 0) return; els[sel].z = --zBot; applyEl(els[sel]);
-        });
+        // Move one step in z-order by swapping z with the nearest neighbour
+        // above (forward) or below (back) — not jumping to the very front/back.
+        function bumpZ(dir) {
+            if (sel < 0) return;
+            const cur = els[sel];
+            let target = null;
+            for (const o of els) {
+                if (o === cur || o.deleted) continue;
+                if (dir > 0 ? (o.z > cur.z) : (o.z < cur.z)) {
+                    if (!target || (dir > 0 ? o.z < target.z : o.z > target.z)) target = o;
+                }
+            }
+            if (!target) return; // already at the top / bottom
+            const tmp = cur.z; cur.z = target.z; target.z = tmp;
+            applyEl(cur); applyEl(target);
+        }
+        document.getElementById('pgFront').addEventListener('click', () => bumpZ(1));
+        document.getElementById('pgBack').addEventListener('click', () => bumpZ(-1));
         document.getElementById('pgDelete').addEventListener('click', () => {
             if (sel < 0) return; els[sel].deleted = true; applyEl(els[sel]); selectEl(-1);
         });
