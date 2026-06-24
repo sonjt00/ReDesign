@@ -774,7 +774,7 @@
         }
         .pg-modes button.active { background: var(--gradient-coral); color: #fff; }
         .pg-hint { display: block; font-size: 0.92rem; line-height: 1.42; color: #1c1d2b; font-weight: 700; }
-        .pg-hint .pg-hint-2 { display: block; margin-top: 0.22rem; font-size: 0.84rem; font-weight: 600; color: var(--color-gray-700); }
+        .pg-hint .pg-hint-2 { display: block; margin-top: 0.22rem; font-size: 0.84rem; font-weight: 600; color: #1c1d2b; }
         .pg-reset {
             width: 100%; border: 1.5px solid var(--color-gray-300); background: #fff; border-radius: 9px;
             padding: 0.55rem 0; font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem;
@@ -881,7 +881,7 @@
             <div class="pg-editor reveal">
                 <div class="pg-stage-col">
                     <div class="pg-toolbar">
-                        <span class="pg-hint" id="pgHint">Click an element to select &middot; drag to move &middot; use the handle to rotate.<span class="pg-hint-2">On the right, adjust the selected element&rsquo;s opacity, rotation, scale, color, and z-order &mdash; or delete it.</span></span>
+                        <span class="pg-hint" id="pgHint">Click an element to select &middot; drag to move &middot; use the handle to rotate.<span class="pg-hint-2">On the right, adjust the selected element&rsquo;s opacity, rotation, scale, color, and z-order, or delete it.</span></span>
                     </div>
                     <div class="pg-stage-outer" id="pgStageOuter">
                         <div class="pg-stage" id="pgStage"></div>
@@ -889,7 +889,7 @@
                 </div>
                 <aside class="pg-side disabled" id="pgSide">
                     <h4>Selected element</h4>
-                    <div class="pg-sel-name" id="pgSelName">None — click an element on the canvas.</div>
+                    <div class="pg-sel-name" id="pgSelName">Click an element on the canvas.</div>
                     <div class="pg-ctl">
                         <span>Opacity <b id="pgOpacityVal">100%</b></span>
                         <input type="range" id="pgOpacity" min="0" max="100" value="100">
@@ -1456,13 +1456,13 @@
             if (i < 0 || els[i].deleted) {
                 sel = -1;
                 side.classList.add('disabled');
-                selName.textContent = 'None — click an element on the canvas.';
+                selName.textContent = 'Click an element on the canvas.';
                 return;
             }
             const o = els[i];
             side.classList.remove('disabled');
-            selName.textContent = o.data.type.toUpperCase() + ' · ' +
-                (o.data.content || o.data.id);
+            const desc = o.data.type === 'text' ? o.data.content : o.data.label;
+            selName.textContent = o.data.type.toUpperCase() + ' · ' + (desc || o.data.id);
             elOpacity.value = Math.round(o.opacity * 100);
             elOpacityVal.textContent = elOpacity.value + '%';
             elRotation.value = Math.round(o.angle);
@@ -1577,7 +1577,17 @@
                 if (!o.mask) return i; // mask not ready yet → fall back to bbox
                 const ax = clamp(Math.floor(lx / elW * o.aw), 0, o.aw - 1);
                 const ay = clamp(Math.floor(ly / elH * o.ah), 0, o.ah - 1);
-                if (o.mask[ay * o.aw + ax]) return i;
+                // ~5px of click tolerance around the point so near-misses on thin
+                // edges still grab the element. The stored mask stays un-dilated,
+                // so z-order overlap testing remains pixel-accurate.
+                const radx = Math.max(1, Math.round(5 / elW * o.aw));
+                const rady = Math.max(1, Math.round(5 / elH * o.ah));
+                const yy0 = Math.max(0, ay - rady), yy1 = Math.min(o.ah - 1, ay + rady);
+                const xx0 = Math.max(0, ax - radx), xx1 = Math.min(o.aw - 1, ax + radx);
+                for (let yy = yy0; yy <= yy1; yy++) {
+                    const row = yy * o.aw;
+                    for (let xx = xx0; xx <= xx1; xx++) if (o.mask[row + xx]) return i;
+                }
             }
             return -1;
         }
