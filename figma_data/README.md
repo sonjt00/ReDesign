@@ -19,7 +19,7 @@ tags:
 <p align="center">
   <a href="https://openreview.net/pdf?id=JiEr8B3WBr"><img alt="Paper" src="https://img.shields.io/badge/Paper-OpenReview-b31b1b?style=for-the-badge&logo=readthedocs&logoColor=white"></a>
   &emsp;&emsp;&emsp;&emsp;
-  <a href="https://sonjt00.github.io/ReDesign/"><img alt="Project Page" src="https://img.shields.io/badge/Project_Page-ReDesign-2ea44f?style=for-the-badge&logo=githubpages&logoColor=white"></a>
+  <a href="https://jintae-00.github.io/ReDesign/"><img alt="Project Page" src="https://img.shields.io/badge/Project_Page-ReDesign-2ea44f?style=for-the-badge&logo=githubpages&logoColor=white"></a>
   &emsp;&emsp;&emsp;&emsp;
   <a href="https://github.com/sonjt00/ReDesign"><img alt="Code" src="https://img.shields.io/badge/Code-GitHub-8957e5?style=for-the-badge&logo=github&logoColor=white"></a>
 </p>

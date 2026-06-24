@@ -31,7 +31,7 @@ A responsive, scroll-driven project page for the ReDesign paper: "Recovering Edi
    - Folder: `/docs`
 3. Click **Save**
 
-GitHub will build and deploy the site to: **https://sonjt00.github.io/ReDesign**
+GitHub will build and deploy the site to: **https://jintae-00.github.io/ReDesign**
 
 The URL will show "ReDesign" as requested.
 
