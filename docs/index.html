@@ -35,7 +35,11 @@
         }
 
         * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        /* Width-relative rendering: the whole page is built in rem/clamp/vh, so
+           scaling the root font with viewport width shrinks the SAME layout down
+           proportionally on smaller screens (phones included) instead of
+           reflowing. Capped at 16px so desktops keep the look that's dialed in. */
+        html { scroll-behavior: smooth; font-size: clamp(9px, 1.33vw, 16px); }
         body {
             font-family: var(--font-body);
             font-size: 0.98rem;
@@ -572,7 +576,7 @@
         /* playground sits toward the top so its header clears the thumbnail strip */
         html.fp-on #fp > section.pg-panel {
             justify-content: flex-start;
-            padding-top: 6.5vh !important;
+            padding-top: 3.2vh !important;
         }
         html.fp-on #fp > header::-webkit-scrollbar,
         html.fp-on #fp > section::-webkit-scrollbar,
@@ -706,22 +710,12 @@
             font-family: var(--font-body);
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .action-grid { grid-template-columns: repeat(3, 1fr); }
-            .action-grid.six-col { grid-template-columns: repeat(3, 1fr); }
-            .benchmark-grid { grid-template-columns: repeat(2, 1fr); }
-            .comparison-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
+        /* Responsive: grids keep their desktop column counts at every width
+           (same layout everywhere) and shrink via the width-relative root font;
+           only heading sizes are nudged down a touch on small screens. */
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             h2 { font-size: 1.8rem; }
-            .action-grid { grid-template-columns: repeat(2, 1fr); }
-            .action-grid.six-col { grid-template-columns: repeat(2, 1fr); }
-            .benchmark-grid { grid-template-columns: repeat(2, 1fr); }
-            .comparison-grid { grid-template-columns: repeat(2, 1fr); }
-            /* Smaller intro headline on mobile */
             .toss-headline { font-size: clamp(1.8rem, 8vw, 2.6rem); }
             .toss-sub { font-size: 1.15rem; }
         }
@@ -729,10 +723,6 @@
         @media (max-width: 576px) {
             h1 { font-size: 2rem; }
             h2 { font-size: 1.5rem; }
-            .action-grid { grid-template-columns: 1fr; }
-            .action-grid.six-col { grid-template-columns: 1fr; }
-            .benchmark-grid { grid-template-columns: 1fr; }
-            .comparison-grid { grid-template-columns: 1fr; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -748,7 +738,7 @@
            ============================================ */
         .pg-panel { padding-top: 4.5vh !important; padding-bottom: 3.5vh !important; }
         .pg { width: 100%; max-width: 1180px; }
-        .pg-sub { display: flex; justify-content: center; align-items: flex-start; gap: 0.6rem; color: #1c1d2b; font-weight: 600; font-size: 1rem; line-height: 1.4; margin: 0 auto 2.4rem; max-width: 760px; }
+        .pg-sub { display: flex; justify-content: center; align-items: flex-start; gap: 0.6rem; font-family: var(--font-body); color: #1c1d2b; font-weight: 400; font-size: 0.86rem; line-height: 1.4; margin: 0 auto 2.4rem; max-width: 760px; }
         /* pretty numbered-step badge */
         .pg-step {
             flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
@@ -763,7 +753,7 @@
             scrollbar-width: thin;
         }
         .pg-thumb {
-            flex: 0 0 auto; width: 116px; height: 84px; padding: 0; border: 2px solid var(--color-gray-200);
+            flex: 0 0 auto; width: 7.25rem; height: 5.25rem; padding: 0; border: 2px solid var(--color-gray-200);
             border-radius: 10px; overflow: hidden; cursor: pointer; background: #fff; line-height: 0;
             transition: border-color .2s, transform .2s, box-shadow .2s;
             display: flex; align-items: center; justify-content: center;
@@ -784,8 +774,7 @@
         .pg-hint { display: block; }
         .pg-line { display: flex; align-items: flex-start; gap: 0.6rem; }
         .pg-line + .pg-line { margin-top: 0.55rem; }
-        .pg-line-1 { font-size: 0.92rem; font-weight: 700; color: #1c1d2b; line-height: 1.4; }
-        .pg-line-2 { font-size: 0.92rem; font-weight: 700; color: #1c1d2b; line-height: 1.4; }
+        .pg-line-1, .pg-line-2 { font-family: var(--font-body); font-size: 0.86rem; font-weight: 400; color: #1c1d2b; line-height: 1.4; }
         .pg-reset {
             width: 100%; border: 1.5px solid var(--color-gray-300); background: #fff; border-radius: 9px;
             padding: 0.55rem 0; font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem;
@@ -822,7 +811,7 @@
         .pg-el.selected .pg-rot { display: block; pointer-events: auto; }
 
         .pg-side {
-            flex: 0 0 256px; background: #fff; border: 1.5px solid var(--color-gray-200); border-radius: 14px;
+            flex: 0 0 16rem; background: #fff; border: 1.5px solid var(--color-gray-200); border-radius: 14px;
             padding: 1rem 1.05rem; display: flex; flex-direction: column; gap: 0.85rem; align-self: stretch;
         }
         .pg-side h4 { font-family: var(--font-heading); font-size: 0.95rem; color: #1c1d2b; margin: 0; }
@@ -844,11 +833,9 @@
         .pg-side.disabled .pg-ctl, .pg-side.disabled .pg-del { opacity: 0.45; pointer-events: none; }
         .pg-empty-note { font-size: 0.82rem; color: var(--color-gray-500); line-height: 1.5; }
 
-        @media (max-width: 860px) {
-            .pg-editor { flex-direction: column; }
-            .pg-side { flex: 0 0 auto; width: 100%; flex-direction: row; flex-wrap: wrap; }
-            .pg-stage-outer { min-height: 46vh; }
-        }
+        /* No mobile reflow for the playground: the stage + side panel keep the
+           same side-by-side layout at every width and scale down via the
+           width-relative root font + flex (sidebar is 16rem, stage auto-fits). */
     </style>
 </head>
 <body>
@@ -886,7 +873,7 @@
     <!-- EDIT PLAYGROUND -->
     <section class="narrow pg-panel" id="playground">
         <div class="pg">
-            <h2 class="text-center reveal" style="margin-bottom:0.95rem;">Try the Edit Playground</h2>
+            <h2 class="text-center reveal" style="margin-bottom:1.4rem;">Try the Edit Playground</h2>
             <p class="pg-sub reveal"><span class="pg-step">1</span><span>Pick a design to see how the ReDesign agent recovered editable design structures.</span></p>
             <div class="pg-previews reveal" id="pgPreviews"></div>
             <div class="pg-editor reveal">
