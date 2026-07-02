@@ -204,30 +204,33 @@
         .author-note {
             width: 100%;
             text-align: center;
-            font-size: 0.85rem;
-            color: var(--color-gray-600);
-            margin-top: 0.4rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1c1d2b;
+            margin-top: 0.5rem;
         }
         /* institution superscripts on names + the numbered affiliation list */
-        .author-aff { font-size: 0.6em; vertical-align: super; color: var(--color-gray-500); font-weight: 600; margin-left: 1px; }
+        .author-aff { font-size: 0.72em; vertical-align: super; color: var(--color-gray-800); font-weight: 700; margin-left: 1.5px; }
         .author-affils {
             width: 100%; display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 0.25rem 1.4rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-gray-600);
+            gap: 0.3rem 1.6rem; margin-top: 0.55rem; font-size: 0.95rem; font-weight: 600; color: #1c1d2b;
         }
-        .author-affils sup { color: var(--color-gray-500); margin-right: 1px; }
+        .author-affils sup { color: var(--color-gray-700); font-weight: 700; margin-right: 1.5px; }
         .hero-affil-wrap { margin: 0 auto; text-align: center; }
-        /* 2x2 grid of institution logos */
+        /* institution logos in a single wide row (scales with the viewport) */
         .hero-logos {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 15rem));
+            display: flex;
+            flex-wrap: nowrap;
             justify-content: center;
             align-items: center;
-            gap: 1.3rem 3rem;
+            gap: clamp(1rem, 3.2vw, 2.8rem);
+            width: 100%;
             margin: 0 auto;
         }
         .hero-affil {
-            max-width: 100%;
-            max-height: clamp(2rem, 4vw, 3rem);
+            flex: 0 1 auto;
+            max-width: 23%;
+            max-height: clamp(2.4rem, 5vw, 4rem);
             width: auto;
             height: auto;
             object-fit: contain;
