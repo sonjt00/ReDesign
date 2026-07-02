@@ -208,15 +208,35 @@
             color: var(--color-gray-600);
             margin-top: 0.4rem;
         }
+        /* institution superscripts on names + the numbered affiliation list */
+        .author-aff { font-size: 0.6em; vertical-align: super; color: var(--color-gray-500); font-weight: 600; margin-left: 1px; }
+        .author-affils {
+            width: 100%; display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 0.25rem 1.4rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-gray-600);
+        }
+        .author-affils sup { color: var(--color-gray-500); margin-right: 1px; }
         .hero-affil-wrap { margin: 0 auto; text-align: center; }
+        /* 2x2 grid of institution logos */
+        .hero-logos {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 15rem));
+            justify-content: center;
+            align-items: center;
+            gap: 1.3rem 3rem;
+            margin: 0 auto;
+        }
         .hero-affil {
-            display: block;
-            width: clamp(280px, 29vw, 410px);
+            max-width: 100%;
+            max-height: clamp(2rem, 4vw, 3rem);
+            width: auto;
             height: auto;
+            object-fit: contain;
             margin: 0 auto;
             border: 0;
             outline: 0;
             background: transparent;
+            box-shadow: none;      /* blend cleanly with the white hero */
+            border-radius: 0;
         }
         /* venue line under the KAIST AI logo — matches the hero subtitle
            (same size/weight + the coral→blue gradient text) */
@@ -872,19 +892,30 @@
         </div>
         <div class="hero-authors reveal">
             <div class="author-row">
-                <span class="author"><span class="name">Jooyeol Yun<sup class="author-mark">*</sup></span><a class="email" href="mailto:blizzard072@kaist.ac.kr">blizzard072@kaist.ac.kr</a></span>
-                <span class="author"><span class="name">Jintae Park<sup class="author-mark">*</sup></span><a class="email" href="mailto:sonjt00@kaist.ac.kr">sonjt00@kaist.ac.kr</a></span>
-                <span class="author"><span class="name">Hyesu Lim</span><a class="email" href="mailto:hyesulim.ac@gmail.com">hyesulim.ac@gmail.com</a></span>
-                <span class="author"><span class="name">Junha Hyung</span><a class="email" href="mailto:sharpeeee@kaist.ac.kr">sharpeeee@kaist.ac.kr</a></span>
+                <span class="author"><span class="name">Jooyeol Yun<sup class="author-mark">*</sup><sup class="author-aff">1</sup></span><a class="email" href="mailto:blizzard072@kaist.ac.kr">blizzard072@kaist.ac.kr</a></span>
+                <span class="author"><span class="name">Jintae Park<sup class="author-mark">*</sup><sup class="author-aff">1</sup></span><a class="email" href="mailto:sonjt00@kaist.ac.kr">sonjt00@kaist.ac.kr</a></span>
+                <span class="author"><span class="name">Hyesu Lim<sup class="author-aff">2</sup></span><a class="email" href="mailto:hye.lim@helmholtz-munich.de">hye.lim@helmholtz-munich.de</a></span>
+                <span class="author"><span class="name">Junha Hyung<sup class="author-aff">1</sup></span><a class="email" href="mailto:sharpeeee@kaist.ac.kr">sharpeeee@kaist.ac.kr</a></span>
             </div>
             <div class="author-row">
-                <span class="author"><span class="name">Hyungjin Chung</span><a class="email" href="mailto:hyungjin.chg@gmail.com">hyungjin.chg@gmail.com</a></span>
-                <span class="author"><span class="name">Jaegul Choo</span><a class="email" href="mailto:jchoo@kaist.ac.kr">jchoo@kaist.ac.kr</a></span>
+                <span class="author"><span class="name">Hyungjin Chung<sup class="author-aff">3,4</sup></span><a class="email" href="mailto:hj.chung@korea.ac.kr">hj.chung@korea.ac.kr</a></span>
+                <span class="author"><span class="name">Jaegul Choo<sup class="author-aff">1</sup></span><a class="email" href="mailto:jchoo@kaist.ac.kr">jchoo@kaist.ac.kr</a></span>
             </div>
             <div class="author-note"><sup class="author-mark">*</sup> Equal contribution</div>
+            <div class="author-affils">
+                <span><sup>1</sup>KAIST AI, Daejeon, Korea</span>
+                <span><sup>2</sup>Helmholtz Munich, Neuherberg, Germany</span>
+                <span><sup>3</sup>Korea University</span>
+                <span><sup>4</sup>EverEx</span>
+            </div>
         </div>
         <div class="reveal hero-affil-wrap">
-            <img class="hero-affil" src="assets/logo_kaist.svg" alt="KAIST AI">
+            <div class="hero-logos">
+                <img class="hero-affil" src="assets/logo_kaist.svg" alt="KAIST AI">
+                <img class="hero-affil" src="assets/logo_helmholtz.svg" alt="Helmholtz Munich">
+                <img class="hero-affil" src="assets/logo_ku.png" alt="Korea University">
+                <img class="hero-affil" src="assets/logo_everex.png" alt="EverEx">
+            </div>
             <div class="hero-venue">ECCV 2026</div>
         </div>
         <div class="hero-btns reveal">
